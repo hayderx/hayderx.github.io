@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T04:45:35.678Z">
+<meta property="og:updated_time" content="2019-07-29T04:53:01.223Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:45:35" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:53:01" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -542,8 +542,27 @@
 
 </li>
 </ol>
-<h3 id="认证机制"><a href="#认证机制" class="headerlink" title="认证机制"></a>认证机制</h3><p>saltstack主控端是依靠openssl证书来与受控端主机认证通讯的，受控端启动后会发送给主控端一个公钥证书文件，在主控端用salt-key命令来管理证书。</p>
+<h3 id="认证机制"><a href="#认证机制" class="headerlink" title="认证机制"></a>认证机制</h3><p>saltstack主控端是依靠openssl证书来与受控端主机认证通讯的，受控端启动后会发送给主控端一个公钥证书文件，在主控端用salt-key命令来管理证书。<br>salt-minion与salt-master的认证过程：</p>
+<ul>
+<li>minion在第一次启动时，会在/etc/salt/pki/minion/下自动生成一对密钥，然后将公钥发给master</li>
+<li>master收到minion的公钥后，通过salt-key命令接受该公钥。此时master的/etc/salt/pki/master/minions目录将会存放以minion id命名的公钥，然后master就能对minion发送控制指令了</li>
+</ul>
+<p>salt-key常用命令选项：</p>
+<pre><code>-L  列出所有公钥信息
+-a minion  接受指定minion等待认证的key
+-A  接受所有minion等待认证的key
+-r minion  拒绝指定minion等待认证的key
+-R  拒绝所有minion等待认证的key
+-f minion  显示指定key的指纹信息
+-F  显示所有key的指纹信息
+-d minion  删除指定minion的key
+-D  删除所有minion的key
+-y  自动回答yes</code></pre><p>查看并接受所有等待认证的key信息：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">log</span>]<span class="comment"># salt-key -L</span></span><br><span class="line">Accepted Keys:</span><br><span class="line">Denied Keys:</span><br><span class="line">Unaccepted Keys:</span><br><span class="line"><span class="number">192.168</span>.<span class="number">111.43</span></span><br><span class="line"><span class="number">192.168</span>.<span class="number">111.45</span></span><br><span class="line"><span class="literal">Master</span></span><br><span class="line">Minion</span><br><span class="line">Rejected Keys:</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[root@Master log]</span># <span class="selector-tag">salt-key</span> <span class="selector-tag">-yA</span></span><br><span class="line"><span class="selector-tag">The</span> <span class="selector-tag">following</span> <span class="selector-tag">keys</span> <span class="selector-tag">are</span> <span class="selector-tag">going</span> <span class="selector-tag">to</span> <span class="selector-tag">be</span> <span class="selector-tag">accepted</span>:</span><br><span class="line"><span class="selector-tag">Unaccepted</span> <span class="selector-tag">Keys</span>:</span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.111</span><span class="selector-class">.43</span></span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.111</span><span class="selector-class">.45</span></span><br><span class="line"><span class="selector-tag">Master</span></span><br><span class="line"><span class="selector-tag">Minion</span></span><br><span class="line"><span class="selector-tag">Key</span> <span class="selector-tag">for</span> <span class="selector-tag">minion</span> 192<span class="selector-class">.168</span><span class="selector-class">.111</span><span class="selector-class">.43</span> <span class="selector-tag">accepted</span>.</span><br><span class="line"><span class="selector-tag">Key</span> <span class="selector-tag">for</span> <span class="selector-tag">minion</span> 192<span class="selector-class">.168</span><span class="selector-class">.111</span><span class="selector-class">.45</span> <span class="selector-tag">accepted</span>.</span><br><span class="line"><span class="selector-tag">Key</span> <span class="selector-tag">for</span> <span class="selector-tag">minion</span> <span class="selector-tag">Master</span> <span class="selector-tag">accepted</span>.</span><br><span class="line"><span class="selector-tag">Key</span> <span class="selector-tag">for</span> <span class="selector-tag">minion</span> <span class="selector-tag">Minion</span> <span class="selector-tag">accepted</span>.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">log</span>]<span class="comment"># salt-key -L </span></span><br><span class="line">Accepted Keys:</span><br><span class="line"><span class="number">192.168</span>.<span class="number">111.43</span></span><br><span class="line"><span class="number">192.168</span>.<span class="number">111.45</span></span><br><span class="line"><span class="literal">Master</span></span><br><span class="line">Minion</span><br><span class="line">Denied Keys:</span><br><span class="line">Unaccepted Keys:</span><br><span class="line">Rejected Keys:</span><br></pre></td></tr></table></figure>
       
     </div>
 
