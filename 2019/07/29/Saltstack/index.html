@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T04:58:18.858Z">
+<meta property="og:updated_time" content="2019-07-29T05:05:10.509Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:58:18" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：13:05:10" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -447,29 +447,19 @@
       
 
       
-        <h3 id="Saltstack介绍"><a href="#Saltstack介绍" class="headerlink" title="Saltstack介绍"></a>Saltstack介绍</h3><ul>
-<li><p>特点：</p>
-<ul>
-<li>基于Python的C/S架构配置管理工具。</li>
-<li>底层使用ZeroMQ消息队列pub/sub方式通信。</li>
-<li>使用SSL证书签发的方式进行认证管理，传输采用AES加密。</li>
-</ul>
+        <h3 id="Saltstack介绍"><a href="#Saltstack介绍" class="headerlink" title="Saltstack介绍"></a>Saltstack介绍</h3><h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><ul>
+<li><p>基于Python的C/S架构配置管理工具。</p>
 </li>
-<li><p>服务架构：</p>
-<p>  在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。</p>
+<li><p>底层使用ZeroMQ消息队列pub/sub方式通信。</p>
 </li>
-<li><p>运行方式：</p>
-<ul>
-<li>local： 本地运行</li>
-<li>Master/Minion：传统方式</li>
-<li>Syndic： 分布式</li>
-<li>Salt ssh</li>
-</ul>
-</li>
-<li><p>组件介绍：</p>
+<li><p>使用SSL证书签发的方式进行认证管理，传输采用AES加密。</p>
+<h4 id="服务架构："><a href="#服务架构：" class="headerlink" title="服务架构："></a>服务架构：</h4><p>在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。</p>
 </li>
 </ul>
-<table>
+<h4 id="运行方式："><a href="#运行方式：" class="headerlink" title="运行方式："></a>运行方式：</h4><pre><code>- local： 本地运行
+- Master/Minion：传统方式
+- Syndic： 分布式
+- Salt ssh</code></pre><h4 id="组件介绍："><a href="#组件介绍：" class="headerlink" title="组件介绍："></a>组件介绍：</h4><table>
 <thead>
 <tr>
 <th>组件</th>
@@ -529,21 +519,16 @@
 <td align="center">salt-minion</td>
 </tr>
 <tr>
-<td>1. 配置yum源</td>
+<td>#### 配置yum源</td>
 <td align="center"></td>
 </tr>
 </tbody></table>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://repo.saltstack.com/yum/redhat/salt-repo-latest-<span class="number">2</span>.el7.noarch.rpm</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# yum</span> -y install salt salt-cloud salt-<span class="keyword">master</span> <span class="title">salt-minion</span> salt-ssh salt-syndic</span><br><span class="line">[root@Minion ~]<span class="comment"># yum -y install salt-minion</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li><p>修改主控端配置文件，修改master地址和id</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#id:/a id: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#id:/a id: 192.168.111.45' /etc/salt/minion</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启动salt-master和salt-minion</p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# systemctl</span> <span class="literal">start</span> salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> <span class="literal">start</span> salt-minion &amp;&amp; systemctl enable salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> enable salt-minion</span><br><span class="line">[root@Minion ~]<span class="comment"># systemctl start salt-minion &amp;&amp; systemctl enable salt-minion</span></span><br></pre></td></tr></table></figure>
+<h4 id="修改主控端配置文件，修改master地址和id"><a href="#修改主控端配置文件，修改master地址和id" class="headerlink" title="修改主控端配置文件，修改master地址和id"></a>修改主控端配置文件，修改master地址和id</h4><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#id:/a id: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#id:/a id: 192.168.111.45' /etc/salt/minion</span></span><br></pre></td></tr></table></figure>
 
-</li>
-</ol>
+<h4 id="启动salt-master和salt-minion"><a href="#启动salt-master和salt-minion" class="headerlink" title="启动salt-master和salt-minion"></a>启动salt-master和salt-minion</h4><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# systemctl</span> <span class="literal">start</span> salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> <span class="literal">start</span> salt-minion &amp;&amp; systemctl enable salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> enable salt-minion</span><br><span class="line">[root@Minion ~]<span class="comment"># systemctl start salt-minion &amp;&amp; systemctl enable salt-minion</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="认证机制"><a href="#认证机制" class="headerlink" title="认证机制"></a>认证机制</h3><p>saltstack主控端是依靠openssl证书来与受控端主机认证通讯的，受控端启动后会发送给主控端一个公钥证书文件，在主控端用salt-key命令来管理证书。<br>salt-minion与salt-master的认证过程：</p>
 <ul>
 <li>minion在第一次启动时，会在/etc/salt/pki/minion/下自动生成一对密钥，然后将公钥发给master</li>
@@ -762,7 +747,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">服务架构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行方式："><span class="nav-number">1.3.</span> <span class="nav-text">运行方式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件介绍："><span class="nav-number">1.4.</span> <span class="nav-text">组件介绍：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改主控端配置文件，修改master地址和id"><span class="nav-number">2.1.</span> <span class="nav-text">修改主控端配置文件，修改master地址和id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动salt-master和salt-minion"><span class="nav-number">2.2.</span> <span class="nav-text">启动salt-master和salt-minion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
             
 
           </div>
