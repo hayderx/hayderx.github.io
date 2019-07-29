@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[Saltstack]]></title>
     <url>%2F2019%2F07%2F29%2FSaltstack%2F</url>
-    <content type="text"><![CDATA[Saltstack介绍 特点： 基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。 服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。]]></content>
+    <content type="text"><![CDATA[Saltstack介绍 特点： 基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。 服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。 运行方式： local： 本地运行 Master/Minion：传统方式 Syndic： 分布式 Salt ssh 组件介绍： Tables Are Cool col 1 is left-aligned $1600 col 2 is centered $12 col 3 is right-aligned $1]]></content>
       <categories>
         <category>devops</category>
       </categories>

@@ -93,18 +93,18 @@
   };
 </script>
 
-  <meta name="description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和">
+  <meta name="description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
 <meta name="keywords" content="devops,saltstack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Saltstack">
 <meta property="og:url" content="http://yoursite.com/2019/07/29/Saltstack/index.html">
 <meta property="og:site_name" content="龙形徽章">
-<meta property="og:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和">
+<meta property="og:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T03:38:35.663Z">
+<meta property="og:updated_time" content="2019-07-29T04:28:46.526Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
-<meta name="twitter:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和">
+<meta name="twitter:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
 
 
 
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：11:38:35" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:28:46" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -454,9 +454,43 @@
 </ul>
 </li>
 <li><p>服务架构：</p>
-<p>在saltstack架构中服务端叫Master，客户端叫Minion。<br>在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。 </p>
+<p>  在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。</p>
+</li>
+<li><p>运行方式：</p>
+<ul>
+<li>local： 本地运行</li>
+<li>Master/Minion：传统方式</li>
+<li>Syndic： 分布式</li>
+<li>Salt ssh</li>
+</ul>
+</li>
+<li><p>组件介绍：</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Tables</th>
+<th align="center">Are</th>
+<th align="right">Cool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>col 1 is</td>
+<td align="center">left-aligned</td>
+<td align="right">$1600</td>
+</tr>
+<tr>
+<td>col 2 is</td>
+<td align="center">centered</td>
+<td align="right">$12</td>
+</tr>
+<tr>
+<td>col 3 is</td>
+<td align="center">right-aligned</td>
+<td align="right">$1</td>
+</tr>
+</tbody></table>
 
       
     </div>
