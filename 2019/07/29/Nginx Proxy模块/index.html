@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T11:01:09.688Z">
+<meta property="og:updated_time" content="2019-07-29T11:04:57.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ngx_http_proxy_module模块">
 <meta name="twitter:description" content="nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 18:09:51 / 修改时间：19:01:09" itemprop="dateCreated datePublished" datetime="2019-07-29T18:09:51+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 18:09:51 / 修改时间：19:04:57" itemprop="dateCreated datePublished" datetime="2019-07-29T18:09:51+08:00">2019-07-29</time>
             </span>
           
 
@@ -627,7 +627,34 @@ off: 停止将请求发送给下一台后端服务器。
 
 <p>最后，使用这条指令也可以为地址为相对地址的重定向添加域名：</p>
 <p>proxy_redirect / /;</p>
+<h3 id="proxy-send-timeout"><a href="#proxy-send-timeout" class="headerlink" title="proxy_send_timeout"></a>proxy_send_timeout</h3><ul>
+<li>语法:    proxy_send_timeout time;</li>
+<li>默认值:  proxy_send_timeout 60s;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>定义向后端服务器传输请求的超时。此超时是指相邻两次写操作之间的最长时间间隔，而不是整个请求传输完成的最长时间。如果后端服务器在超时时间段内没有接收到任何数据，连接将被关闭。</p>
+<h3 id="proxy-set-header"><a href="#proxy-set-header" class="headerlink" title="proxy_set_header"></a>proxy_set_header</h3><p>语法:  proxy_set_header field value;<br>默认值:    </p>
+<ul>
+<li>proxy_set_header Host $proxy_host;</li>
+<li>proxy_set_header Connection close;<ul>
+<li>上下文:    http, server, location</li>
+</ul>
+</li>
+</ul>
+<p>允许重新定义或者添加发往后端服务器的请求头。value可以包含文本、变量或者它们的组合。 当且仅当当前配置级别中没有定义proxy_set_header指令时，会从上面的级别继承配置。 默认情况下，只有两个请求头会被重新定义：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header Host       <span class="variable">$proxy_host</span>;</span><br><span class="line">proxy_set_header<span class="built_in"> Connection </span>close;</span><br></pre></td></tr></table></figure>
 
+<p>如果不想改变请求头“Host”的值，可以这样来设置：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> Host       <span class="variable">$http_host</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是，如果客户端请求头中没有携带这个头部，那么传递到后端服务器的请求也不含这个头部。 这种情况下，更好的方式是使用$host变量——它的值在请求包含“Host”请求头时为“Host”字段的值，在请求未携带“Host”请求头时为虚拟主机的主域名：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> Host       <span class="variable">$host</span>;</span><br></pre></td></tr></table></figure>
+
+<p>此外，服务器名可以和后端服务器的端口一起传送：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> Host       <span class="variable">$host</span>:<span class="variable">$proxy_port</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果某个请求头的值为空，那么这个请求头将不会传送给后端服务器：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header Accept-Encoding <span class="string">""</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -831,7 +858,7 @@ off: 停止将请求发送给下一台后端服务器。
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#指令"><span class="nav-number">1.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffer-size"><span class="nav-number">1.1.</span> <span class="nav-text">proxy_buffer_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffering"><span class="nav-number">1.2.</span> <span class="nav-text">proxy_buffering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffers"><span class="nav-number">1.3.</span> <span class="nav-text">proxy_buffers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxu-busy-buffers-size"><span class="nav-number">1.4.</span> <span class="nav-text">proxu_busy_buffers_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache"><span class="nav-number">1.5.</span> <span class="nav-text">proxy_cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-bypass"><span class="nav-number">1.6.</span> <span class="nav-text">proxy_cache_bypass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-key"><span class="nav-number">1.7.</span> <span class="nav-text">proxy_cache_key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-valid"><span class="nav-number">1.8.</span> <span class="nav-text">proxy_cache_valid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-connect-timeout"><span class="nav-number">1.9.</span> <span class="nav-text">proxy_connect_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-hide-header"><span class="nav-number">1.10.</span> <span class="nav-text">proxy_hide_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-http-version"><span class="nav-number">1.11.</span> <span class="nav-text">proxy_http_version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-ignore-client-abort"><span class="nav-number">1.12.</span> <span class="nav-text">proxy_ignore_client_abort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-intercept-errors"><span class="nav-number">1.13.</span> <span class="nav-text">proxy_intercept_errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-max-temp-file-size"><span class="nav-number">1.14.</span> <span class="nav-text">proxy_max_temp_file_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-next-upstream"><span class="nav-number">1.15.</span> <span class="nav-text">proxy_next_upstream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass"><span class="nav-number">1.16.</span> <span class="nav-text">proxy_pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass-header"><span class="nav-number">1.17.</span> <span class="nav-text">proxy_pass_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-read-timeout"><span class="nav-number">1.18.</span> <span class="nav-text">proxy_read_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-redirect"><span class="nav-number">1.19.</span> <span class="nav-text">proxy_redirect</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#指令"><span class="nav-number">1.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffer-size"><span class="nav-number">1.1.</span> <span class="nav-text">proxy_buffer_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffering"><span class="nav-number">1.2.</span> <span class="nav-text">proxy_buffering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffers"><span class="nav-number">1.3.</span> <span class="nav-text">proxy_buffers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxu-busy-buffers-size"><span class="nav-number">1.4.</span> <span class="nav-text">proxu_busy_buffers_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache"><span class="nav-number">1.5.</span> <span class="nav-text">proxy_cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-bypass"><span class="nav-number">1.6.</span> <span class="nav-text">proxy_cache_bypass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-key"><span class="nav-number">1.7.</span> <span class="nav-text">proxy_cache_key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-valid"><span class="nav-number">1.8.</span> <span class="nav-text">proxy_cache_valid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-connect-timeout"><span class="nav-number">1.9.</span> <span class="nav-text">proxy_connect_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-hide-header"><span class="nav-number">1.10.</span> <span class="nav-text">proxy_hide_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-http-version"><span class="nav-number">1.11.</span> <span class="nav-text">proxy_http_version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-ignore-client-abort"><span class="nav-number">1.12.</span> <span class="nav-text">proxy_ignore_client_abort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-intercept-errors"><span class="nav-number">1.13.</span> <span class="nav-text">proxy_intercept_errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-max-temp-file-size"><span class="nav-number">1.14.</span> <span class="nav-text">proxy_max_temp_file_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-next-upstream"><span class="nav-number">1.15.</span> <span class="nav-text">proxy_next_upstream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass"><span class="nav-number">1.16.</span> <span class="nav-text">proxy_pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass-header"><span class="nav-number">1.17.</span> <span class="nav-text">proxy_pass_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-read-timeout"><span class="nav-number">1.18.</span> <span class="nav-text">proxy_read_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-redirect"><span class="nav-number">1.19.</span> <span class="nav-text">proxy_redirect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-send-timeout"><span class="nav-number">1.20.</span> <span class="nav-text">proxy_send_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-set-header"><span class="nav-number">1.21.</span> <span class="nav-text">proxy_set_header</span></a></li></ol></li></ol></div>
             
 
           </div>
