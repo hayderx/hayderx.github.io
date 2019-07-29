@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T05:05:10.509Z">
+<meta property="og:updated_time" content="2019-07-29T05:06:25.761Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：13:05:10" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：13:06:25" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -518,12 +518,8 @@
 <td>192.168.111.45</td>
 <td align="center">salt-minion</td>
 </tr>
-<tr>
-<td>#### 配置yum源</td>
-<td align="center"></td>
-</tr>
 </tbody></table>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://repo.saltstack.com/yum/redhat/salt-repo-latest-<span class="number">2</span>.el7.noarch.rpm</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# yum</span> -y install salt salt-cloud salt-<span class="keyword">master</span> <span class="title">salt-minion</span> salt-ssh salt-syndic</span><br><span class="line">[root@Minion ~]<span class="comment"># yum -y install salt-minion</span></span><br></pre></td></tr></table></figure>
+<h4 id="配置yum源"><a href="#配置yum源" class="headerlink" title="配置yum源"></a>配置yum源</h4><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://repo.saltstack.com/yum/redhat/salt-repo-latest-<span class="number">2</span>.el7.noarch.rpm</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# yum</span> -y install salt salt-cloud salt-<span class="keyword">master</span> <span class="title">salt-minion</span> salt-ssh salt-syndic</span><br><span class="line">[root@Minion ~]<span class="comment"># yum -y install salt-minion</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="修改主控端配置文件，修改master地址和id"><a href="#修改主控端配置文件，修改master地址和id" class="headerlink" title="修改主控端配置文件，修改master地址和id"></a>修改主控端配置文件，修改master地址和id</h4><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#id:/a id: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#id:/a id: 192.168.111.45' /etc/salt/minion</span></span><br></pre></td></tr></table></figure>
 
@@ -747,7 +743,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">服务架构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行方式："><span class="nav-number">1.3.</span> <span class="nav-text">运行方式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件介绍："><span class="nav-number">1.4.</span> <span class="nav-text">组件介绍：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改主控端配置文件，修改master地址和id"><span class="nav-number">2.1.</span> <span class="nav-text">修改主控端配置文件，修改master地址和id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动salt-master和salt-minion"><span class="nav-number">2.2.</span> <span class="nav-text">启动salt-master和salt-minion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">服务架构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行方式："><span class="nav-number">1.3.</span> <span class="nav-text">运行方式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件介绍："><span class="nav-number">1.4.</span> <span class="nav-text">组件介绍：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置yum源"><span class="nav-number">2.1.</span> <span class="nav-text">配置yum源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改主控端配置文件，修改master地址和id"><span class="nav-number">2.2.</span> <span class="nav-text">修改主控端配置文件，修改master地址和id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动salt-master和salt-minion"><span class="nav-number">2.3.</span> <span class="nav-text">启动salt-master和salt-minion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
             
 
           </div>
