@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。">
+<meta name="keywords" content="Nginx,Web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ngx_http_proxy_module模块">
+<meta property="og:url" content="http://yoursite.com/2019/07/29/Nginx Proxy模块/index.html">
+<meta property="og:site_name" content="龙形徽章">
+<meta property="og:description" content="nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-29T11:01:09.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ngx_http_proxy_module模块">
+<meta name="twitter:description" content="nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/07/29/Nginx Proxy模块/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>ngx_http_proxy_module模块 | 龙形徽章</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">龙形徽章</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/29/Nginx Proxy模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hayder's BLog">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="龙形徽章">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ngx_http_proxy_module模块
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-29 18:09:51 / 修改时间：19:01:09" itemprop="dateCreated datePublished" datetime="2019-07-29T18:09:51+08:00">2019-07-29</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><h3 id="proxy-buffer-size"><a href="#proxy-buffer-size" class="headerlink" title="proxy_buffer_size"></a>proxy_buffer_size</h3><ul>
+<li>语法：proxy_buffer_size size</li>
+<li>默认值：proxy_buffer_size 4k|8k；</li>
+<li>上下文：http，server，location</li>
+</ul>
+<p>设置缓冲区的大小为size，nginx从被代理的服务器读取响应时，使用该缓冲区保存响应的开始部分，这部分通常包含一个小小的响应头，该缓冲区大小默认为proxy_buffers指令设置的一块缓冲区的大小。</p>
+<h3 id="proxy-buffering"><a href="#proxy-buffering" class="headerlink" title="proxy_buffering"></a>proxy_buffering</h3><ul>
+<li>语法： proxy_buffering on |off</li>
+<li>默认值： proxy_buffering on；</li>
+<li>上下文： http，server，location</li>
+</ul>
+<p>代理的时候，开启或关闭缓冲后端服务器的响应。</p>
+<p>当开启缓冲时，nginx尽可能快地从被代理的服务器接收响应，再将它存入proxy_buffer_size和proxy_buffers指令设置的缓冲区中。如果响应无法整个纳入内存，那么其中一部分将存入磁盘上的临时文件proxy_max_temp_file_size和proxy_temp_file_write_size指令可以控制临时文件的写入。<br>当关闭缓冲时，收到响应后，nginx立即将其同步传给客户端。nginx不会尝试从被代理的服务器读取整个请求，而是将proxy_buffer_size指令设定的大小作为一次读取的最大长度。</p>
+<h3 id="proxy-buffers"><a href="#proxy-buffers" class="headerlink" title="proxy_buffers"></a>proxy_buffers</h3><ul>
+<li>语法：proxy_buffers number size;</li>
+<li>默认值：proxy_buffers 8 4k|8k;</li>
+<li>上下文： http，server，location</li>
+</ul>
+<p>为每个连接设置缓冲区的数量为number，每块缓冲区的大小为size。这些缓冲区用于保存从被代理的服务器读取的响应。每块缓冲区默认等于一个内存页的大小。这个值是4K还是8K，取决于平台。</p>
+<h3 id="proxu-busy-buffers-size"><a href="#proxu-busy-buffers-size" class="headerlink" title="proxu_busy_buffers_size"></a>proxu_busy_buffers_size</h3><ul>
+<li>语法: proxy_busy_buffers_size size;</li>
+<li>默认值: proxy_busy_buffers_size 8k|16k;</li>
+<li>上下文: http, server, location</li>
+</ul>
+<p>当开启缓冲响应的功能以后，在没有读到全部响应的情况下，写缓冲到达一定大小时，nginx一定会向客户端发送响应，直到缓冲小于此值。这条指令用来设置此值。 同时，剩余的缓冲区可以用于接收响应，如果需要，一部分内容将缓冲到临时文件。该大小默认是proxy_buffer_size和proxy_buffers指令设置单块缓冲大小的两倍。</p>
+<h3 id="proxy-cache"><a href="#proxy-cache" class="headerlink" title="proxy_cache"></a>proxy_cache</h3><ul>
+<li>语法:    proxy_cache zone | off;</li>
+<li>默认值: proxy_cache off;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>指定用于页面缓存的共享内存。同一块共享内存可以在多个地方使用。off参数可以屏蔽从上层配置继承的缓存功能。</p>
+<h3 id="proxy-cache-bypass"><a href="#proxy-cache-bypass" class="headerlink" title="proxy_cache_bypass"></a>proxy_cache_bypass</h3><ul>
+<li>语法:    proxy_cache_bypass string …;</li>
+<li>默认值:    —</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>定义nginx不从缓存取响应的条件。如果至少一个字符串条件非空而且非“0”，nginx就不会从缓存中去取响应：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_cache_bypass</span> <span class="variable">$cookie_nocache</span> <span class="variable">$arg_nocache</span><span class="variable">$arg_comment</span>;</span><br><span class="line"><span class="attribute">proxy_cache_bypass</span> <span class="variable">$http_pragma</span>    <span class="variable">$http_authorization</span>;</span><br></pre></td></tr></table></figure>
+
+<p>本指令可和与proxy_no_cache一起使用。</p>
+<h3 id="proxy-cache-key"><a href="#proxy-cache-key" class="headerlink" title="proxy_cache_key"></a>proxy_cache_key</h3><p>语法:    proxy_cache_key string;<br>默认值:    proxy_cache_key $scheme$proxy_host$request_uri;<br>上下文:    http, server, location<br>定义如何生成缓存的键，比如</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_cache_key</span> <span class="string">"<span class="variable">$host</span><span class="variable">$request_uri</span> <span class="variable">$cookie_user</span>"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这条指令的默认值类似于下面字符串</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_cache_key</span> <span class="variable">$scheme</span><span class="variable">$proxy_host</span><span class="variable">$uri</span><span class="variable">$is_args</span><span class="variable">$args</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="proxy-cache-valid"><a href="#proxy-cache-valid" class="headerlink" title="proxy_cache_valid"></a>proxy_cache_valid</h3><ul>
+<li>语法:    proxy_cache_valid [code …] time;</li>
+<li>默认值:  —</li>
+<li>上下文:  http, server, location</li>
+</ul>
+<p>为不同的响应状态码设置不同的缓存时间。比如，下面指令</p>
+<p>proxy_cache_valid 200 302 10m;<br>proxy_cache_valid 404      1m;<br>设置状态码为200和302的响应的缓存时间为10分钟，状态码为404的响应的缓存时间为1分钟。</p>
+<p>如果仅仅指定了time，</p>
+<p>proxy_cache_valid 5m;<br>那么只有状态码为200、300和302的响应会被缓存。</p>
+<p>如果使用了any参数，那么就可以缓存任何响应：</p>
+<p>proxy_cache_valid 200 302 10m;<br>proxy_cache_valid 301      1h;<br>proxy_cache_valid any      1m;<br>缓存参数也可以直接在响应头中设定。这种方式的优先级高于使用这条指令设置缓存时间。 “X-Accel-Expires”响应头可以以秒为单位设置响应的缓存时间，如果值为0，表示禁止缓存响应，如果值以@开始，表示自1970年1月1日以来的秒数，响应一直会被缓存到这个绝对时间点。 如果不含“X-Accel-Expires”响应头，缓存参数仍可能被“Expires”或者“Cache-Control”响应头设置。 如果响应头含有“Set-Cookie”，响应将不能被缓存。 这些头的处理过程可以使用指令proxy_ignore_headers忽略。</p>
+<h3 id="proxy-connect-timeout"><a href="#proxy-connect-timeout" class="headerlink" title="proxy_connect_timeout"></a>proxy_connect_timeout</h3><ul>
+<li>语法:    proxy_connect_timeout time;</li>
+<li>默认值:  proxy_connect_timeout 60s;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>设置与后端服务器建立连接的超时时间。应该注意这个超时一般不可能大于75秒。</p>
+<h3 id="proxy-hide-header"><a href="#proxy-hide-header" class="headerlink" title="proxy_hide_header"></a>proxy_hide_header</h3><p>语法:    proxy_hide_header field;<br>默认值:    —<br>上下文:    http, server, location<br>nginx默认不会将“Date”、“Server”、“X-Pad”，和“X-Accel-…”响应头发送给客户端。proxy_hide_header指令则可以设置额外的响应头，这些响应头也不会发送给客户端。相反的，如果希望允许传递某些响应头给客户端，可以使用proxy_pass_header指令。</p>
+<h3 id="proxy-http-version"><a href="#proxy-http-version" class="headerlink" title="proxy_http_version"></a>proxy_http_version</h3><p>语法:    proxy_http_version 1.0 | 1.1;<br>默认值:<br>proxy_http_version 1.0;<br>上下文:    http, server, location<br>这个指令出现在版本 1.1.4.</p>
+<p>设置代理使用的HTTP协议版本。默认使用的版本是1.0，而1.1版本则推荐在使用keepalive连接和 NTLM身份验证时一起使用。</p>
+<h3 id="proxy-ignore-client-abort"><a href="#proxy-ignore-client-abort" class="headerlink" title="proxy_ignore_client_abort"></a>proxy_ignore_client_abort</h3><ul>
+<li>语法:    proxy_ignore_client_abort on | off;</li>
+<li>默认值:  proxy_ignore_client_abort off;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>决定当客户端在响应传输完成前就关闭连接时，nginx是否应关闭后端连接。</p>
+<p>### </p>
+<ul>
+<li>语法:    proxy_ignore_headers field …;</li>
+<li>默认值:    —</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>不处理后端服务器返回的指定响应头。下面的响应头可以被设置： “X-Accel-Redirect”，“X-Accel-Expires”，“X-Accel-Limit-Rate” (1.1.6)，“X-Accel-Buffering” (1.1.6)， “X-Accel-Charset” (1.1.6)，“Expires”，“Cache-Control”，和“Set-Cookie” (0.8.44)。</p>
+<p>如果不被取消，这些头部的处理可能产生下面结果：</p>
+<p>“X-Accel-Expires”，“Expires”，“Cache-Control”，和“Set-Cookie” 设置响应缓存的参数；<br>“X-Accel-Redirect”执行到指定URI的内部跳转；<br>“X-Accel-Limit-Rate”设置响应到客户端的传输速率限制；<br>“X-Accel-Buffering”启动或者关闭响应缓冲；<br>“X-Accel-Charset”设置响应所需的字符集。</p>
+<h3 id="proxy-intercept-errors"><a href="#proxy-intercept-errors" class="headerlink" title="proxy_intercept_errors"></a>proxy_intercept_errors</h3><ul>
+<li>语法:    proxy_intercept_errors on | off;</li>
+<li>默认值:    proxy_intercept_errors off;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>当后端服务器的响应状态码大于等于400时，决定是否直接将响应发送给客户端，亦或将响应转发给nginx由error_page指令来处理。</p>
+<h3 id="proxy-max-temp-file-size"><a href="#proxy-max-temp-file-size" class="headerlink" title="proxy_max_temp_file_size"></a>proxy_max_temp_file_size</h3><ul>
+<li>语法:    proxy_max_temp_file_size size;</li>
+<li>默认值:    proxy_max_temp_file_size 1024m;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>打开响应缓冲以后，如果整个响应不能存放在proxy_buffer_size和proxy_buffers指令设置的缓冲区内，部分响应可以存放在临时文件中。 这条指令可以设置临时文件的最大容量。而每次写入临时文件的数据量则由proxy_temp_file_write_size指令定义。<br>将此值设置为0将禁止响应写入临时文件。</p>
+<h3 id="proxy-next-upstream"><a href="#proxy-next-upstream" class="headerlink" title="proxy_next_upstream"></a>proxy_next_upstream</h3><ul>
+<li>语法:    proxy_next_upstream error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_404 | off …;</li>
+<li>默认值: proxy_next_upstream error timeout;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>指定在何种情况下一个失败的请求应该被发送到下一台后端服务器：</p>
+<pre><code>error: 和后端服务器建立连接时，或者向后端服务器发送请求时，或者从后端服务器接收响应头时，出现错误；
+timeout: 和后端服务器建立连接时，或者向后端服务器发送请求时，或者从后端服务器接收响应头时，出现超时；
+invalid_header: 后端服务器返回空响应或者非法响应头；
+http_500: 后端服务器返回的响应状态码为500；
+http_502: 后端服务器返回的响应状态码为502；
+http_503: 后端服务器返回的响应状态码为503；
+http_504: 后端服务器返回的响应状态码为504；
+http_404: 后端服务器返回的响应状态码为404；
+off: 停止将请求发送给下一台后端服务器。
+需要理解一点的是，只有在没有向客户端发送任何数据以前，将请求转给下一台后端服务器才是可行的。也就是说，如果在传输响应到客户端时出现错误或者超时，这类错误是不可能恢复的。</code></pre><h3 id="proxy-pass"><a href="#proxy-pass" class="headerlink" title="proxy_pass"></a>proxy_pass</h3><ul>
+<li>语法:    proxy_pass URL;</li>
+<li>默认值:    —</li>
+<li>上下文:    location, if in location, limit_except</li>
+</ul>
+<p>设置后端服务器的协议和地址，还可以设置可选的URI以定义本地路径和后端服务器的映射关系。 这条指令可以设置的协议是“http”或者“https”，而地址既可以使用域名或者IP地址加端口（可选）的形式来定义：</p>
+<p>proxy_pass <a href="http://localhost:8000/uri/" target="_blank" rel="noopener">http://localhost:8000/uri/</a>;<br>又可以使用UNIX域套接字路径来定义。该路径接在“unix”字符串后面，两端由冒号所包围，比如：</p>
+<p>proxy_pass <a href="http://unix:/tmp/backend.socket:/uri/" target="_blank" rel="noopener">http://unix:/tmp/backend.socket:/uri/</a>;<br>如果解析一个域名得到多个地址，所有的地址都会以轮转的方式被使用。当然，也可以使用服务器组来定义地址。</p>
+<p>请求URI按下面规则传送给后端服务器：</p>
+<p>如果proxy_pass使用了URI，当传送请求到后端服务器时，规范化以后的请求路径与配置中的路径的匹配部分将被替换为指令中定义的URI：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location <span class="regexp">/name/</span> &#123;</span><br><span class="line">    proxy_pass http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span><span class="regexp">/remote/</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果proxy_pass没有使用URI，传送到后端服务器的请求URI一般客户端发起的原始URI，如果nginx改变了请求URI，则传送的URI是nginx改变以后完整的规范化URI：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">location</span> <span class="title">/some</span>/path/ &#123;</span><br><span class="line">    proxy_pass http://<span class="number">127.0</span>.<span class="number">0.1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在1.1.12版以前，如果proxy_pass没有使用URI，某些情况下，nginx改变URI以后，会错误地将原始URI而不是改变以后的URI发送到后端服务器。<br>某些情况下，无法确定请求URI中应该被替换的部分：</p>
+<p>使用正则表达式定义路径。<br>这种情况下，指令不应该使用URI。</p>
+<p>在需要代理的路径中，使用rewrite指令改变了URI，但仍使用相同配置处理请求(break)：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location <span class="regexp">/name/</span> &#123;</span><br><span class="line">    rewrite    <span class="regexp">/name/</span>([^<span class="regexp">/]+) /u</span>sers?name=<span class="variable">$1</span> <span class="keyword">break</span>;</span><br><span class="line">    proxy_pass http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0.1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种情况下，本指令设置的URI会被忽略，改变后的URI将被发送给后端服务器。</p>
+<p>后端服务器的地址，端口和URI中都可以使用变量：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass</span> http://<span class="variable">$host</span><span class="variable">$uri</span>;</span><br></pre></td></tr></table></figure>
+
+<p>甚至像这样：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_pass</span> <span class="variable">$request</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这种情况下，后端服务器的地址将会在定义的服务器组中查找。如果查找不到，nginx使用resolver来查找该地址。</p>
+<h3 id="proxy-pass-header"><a href="#proxy-pass-header" class="headerlink" title="proxy_pass_header"></a>proxy_pass_header</h3><ul>
+<li>语法:    proxy_pass_header field;</li>
+<li>默认值:  —</li>
+<li>上下文:  http, server, location</li>
+</ul>
+<p>允许传送被屏蔽的后端服务器响应头到客户端。</p>
+<h3 id="proxy-read-timeout"><a href="#proxy-read-timeout" class="headerlink" title="proxy_read_timeout"></a>proxy_read_timeout</h3><ul>
+<li>语法:    proxy_read_timeout time;</li>
+<li>默认值:  proxy_read_timeout 60s;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>定义从后端服务器读取响应的超时。此超时是指相邻两次读操作之间的最长时间间隔，而不是整个响应传输完成的最长时间。如果后端服务器在超时时间段内没有传输任何数据，连接将被关闭。</p>
+<h3 id="proxy-redirect"><a href="#proxy-redirect" class="headerlink" title="proxy_redirect"></a>proxy_redirect</h3><ul>
+<li>语法:    <ul>
+<li>proxy_redirect default;</li>
+<li>proxy_redirect off;</li>
+<li>proxy_redirect redirect replacement;</li>
+</ul>
+</li>
+<li>默认值:    proxy_redirect default;</li>
+<li>上下文:    http, server, location</li>
+</ul>
+<p>设置后端服务器“Location”响应头和“Refresh”响应头的替换文本。 假设后端服务器返回的响应头是 “Location: <a href="http://localhost:8000/two/some/uri/”，那么指令" target="_blank" rel="noopener">http://localhost:8000/two/some/uri/”，那么指令</a></p>
+<p>proxy_redirect <a href="http://localhost:8000/two/" target="_blank" rel="noopener">http://localhost:8000/two/</a> <a href="http://frontend/one/" target="_blank" rel="noopener">http://frontend/one/</a>; 将把字符串改写为 “Location: <a href="http://frontend/one/some/uri/”。" target="_blank" rel="noopener">http://frontend/one/some/uri/”。</a></p>
+<p>replacement字符串可以省略服务器名：<br>proxy_redirect <a href="http://localhost:8000/two/" target="_blank" rel="noopener">http://localhost:8000/two/</a> /;<br>此时将使用代理服务器的主域名和端口号来替换。如果端口是80，可以不加。</p>
+<p>用default参数指定的默认替换使用了location和proxy_pass指令的参数。因此，下面两例配置等价：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location <span class="regexp">/one/</span> &#123;</span><br><span class="line">    proxy_pass     http:<span class="regexp">//u</span>pstream:port<span class="regexp">/two/</span>;</span><br><span class="line">    proxy_redirect default;</span><br><span class="line">location <span class="regexp">/one/</span> &#123;</span><br><span class="line">    proxy_pass     http:<span class="regexp">//u</span>pstream:port<span class="regexp">/two/</span>;</span><br><span class="line">    proxy_redirect http:<span class="regexp">//u</span>pstream:port<span class="regexp">/two/</span> <span class="regexp">/one/</span>;</span><br></pre></td></tr></table></figure>
+
+<p>而且因为同样的原因，proxy_pass指令使用变量时，不允许本指令使用default参数。</p>
+<p>replacement字符串可以包含变量：</p>
+<ul>
+<li>proxy_redirect <a href="http://localhost:8000/" target="_blank" rel="noopener">http://localhost:8000/</a> http://$host:$server_port/;<br>而redirect字符串从1.1.11版本开始也可以包含变量：</li>
+</ul>
+<p>proxy_redirect http://$proxy_host:8000/ /;<br>同时，从1.1.11版本开始，指令支持正则表达式。使用正则表达式的话，如果是大小写敏感的匹配，redirect以“<del>”作为开始，如果是大小写不敏感的匹配，redirect以“</del>*”作为开始。而且redirect的正则表达式中可以包含命名匹配组和位置匹配组，而在replacement中可以引用这些匹配组的值：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">proxy_redirect ~^(<span class="symbol">http:</span>/<span class="regexp">/[^:]+):\d+(/</span>.+)<span class="variable">$ </span><span class="variable">$1</span><span class="variable">$2</span>;</span><br><span class="line">proxy_redirect ~*<span class="regexp">/user/</span>([^<span class="regexp">/]+)/</span>(.+)<span class="variable">$ </span>     <span class="symbol">http:</span>/<span class="regexp">/$1.example.com/</span><span class="variable">$2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>除此以外，可以同时定义多个proxy_redirect指令：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">proxy_redirect <span class="keyword">default</span>;</span><br><span class="line">proxy_redirect <span class="string">http:</span><span class="comment">//localhost:8000/  /;</span></span><br><span class="line">proxy_redirect <span class="string">http:</span><span class="comment">//www.example.com/ /;</span></span><br></pre></td></tr></table></figure>
+
+<p>另外，off参数可以使所有相同配置级别的proxy_redirect指令无效：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxy_redirect</span> <span class="literal">off</span>;</span><br><span class="line"><span class="attribute">proxy_redirect</span> default;</span><br><span class="line"><span class="attribute">proxy_redirect</span> http://localhost:8000/  /;</span><br><span class="line"><span class="attribute">proxy_redirect</span> http://www.example.com/ /;</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用这条指令也可以为地址为相对地址的重定向添加域名：</p>
+<p>proxy_redirect / /;</p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/29/Saltstack/" rel="next" title="Saltstack">
+                <i class="fa fa-chevron-left"></i> Saltstack
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">Hayder's BLog</p>
+  <div class="site-description motion-element" itemprop="description"></div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#指令"><span class="nav-number">1.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffer-size"><span class="nav-number">1.1.</span> <span class="nav-text">proxy_buffer_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffering"><span class="nav-number">1.2.</span> <span class="nav-text">proxy_buffering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-buffers"><span class="nav-number">1.3.</span> <span class="nav-text">proxy_buffers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxu-busy-buffers-size"><span class="nav-number">1.4.</span> <span class="nav-text">proxu_busy_buffers_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache"><span class="nav-number">1.5.</span> <span class="nav-text">proxy_cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-bypass"><span class="nav-number">1.6.</span> <span class="nav-text">proxy_cache_bypass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-key"><span class="nav-number">1.7.</span> <span class="nav-text">proxy_cache_key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-cache-valid"><span class="nav-number">1.8.</span> <span class="nav-text">proxy_cache_valid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-connect-timeout"><span class="nav-number">1.9.</span> <span class="nav-text">proxy_connect_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-hide-header"><span class="nav-number">1.10.</span> <span class="nav-text">proxy_hide_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-http-version"><span class="nav-number">1.11.</span> <span class="nav-text">proxy_http_version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-ignore-client-abort"><span class="nav-number">1.12.</span> <span class="nav-text">proxy_ignore_client_abort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-intercept-errors"><span class="nav-number">1.13.</span> <span class="nav-text">proxy_intercept_errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-max-temp-file-size"><span class="nav-number">1.14.</span> <span class="nav-text">proxy_max_temp_file_size</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-next-upstream"><span class="nav-number">1.15.</span> <span class="nav-text">proxy_next_upstream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass"><span class="nav-number">1.16.</span> <span class="nav-text">proxy_pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-pass-header"><span class="nav-number">1.17.</span> <span class="nav-text">proxy_pass_header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-read-timeout"><span class="nav-number">1.18.</span> <span class="nav-text">proxy_read_timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-redirect"><span class="nav-number">1.19.</span> <span class="nav-text">proxy_redirect</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hayder's BLog</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
