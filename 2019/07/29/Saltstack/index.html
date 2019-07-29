@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T05:06:25.761Z">
+<meta property="og:updated_time" content="2019-07-29T05:08:16.555Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：13:06:25" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：13:08:16" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -447,16 +447,16 @@
       
 
       
-        <h3 id="Saltstack介绍"><a href="#Saltstack介绍" class="headerlink" title="Saltstack介绍"></a>Saltstack介绍</h3><h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><ul>
+        <h3 id="Saltstack介绍"><a href="#Saltstack介绍" class="headerlink" title="Saltstack介绍"></a>Saltstack介绍</h3><h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><ul>
 <li><p>基于Python的C/S架构配置管理工具。</p>
 </li>
 <li><p>底层使用ZeroMQ消息队列pub/sub方式通信。</p>
 </li>
 <li><p>使用SSL证书签发的方式进行认证管理，传输采用AES加密。</p>
-<h4 id="服务架构："><a href="#服务架构：" class="headerlink" title="服务架构："></a>服务架构：</h4><p>在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。</p>
+<h4 id="服务架构"><a href="#服务架构" class="headerlink" title="服务架构"></a>服务架构</h4><p>在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。当Minion运行时会自动链接到配置文件里定义的Master地址ret_port端口进行连接认证。</p>
 </li>
 </ul>
-<h4 id="运行方式："><a href="#运行方式：" class="headerlink" title="运行方式："></a>运行方式：</h4><pre><code>- local： 本地运行
+<h4 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h4><pre><code>- local： 本地运行
 - Master/Minion：传统方式
 - Syndic： 分布式
 - Salt ssh</code></pre><h4 id="组件介绍："><a href="#组件介绍：" class="headerlink" title="组件介绍："></a>组件介绍：</h4><table>
@@ -743,7 +743,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点："><span class="nav-number">1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务架构："><span class="nav-number">1.2.</span> <span class="nav-text">服务架构：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行方式："><span class="nav-number">1.3.</span> <span class="nav-text">运行方式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件介绍："><span class="nav-number">1.4.</span> <span class="nav-text">组件介绍：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置yum源"><span class="nav-number">2.1.</span> <span class="nav-text">配置yum源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改主控端配置文件，修改master地址和id"><span class="nav-number">2.2.</span> <span class="nav-text">修改主控端配置文件，修改master地址和id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动salt-master和salt-minion"><span class="nav-number">2.3.</span> <span class="nav-text">启动salt-master和salt-minion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务架构"><span class="nav-number">1.2.</span> <span class="nav-text">服务架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行方式"><span class="nav-number">1.3.</span> <span class="nav-text">运行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件介绍："><span class="nav-number">1.4.</span> <span class="nav-text">组件介绍：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置yum源"><span class="nav-number">2.1.</span> <span class="nav-text">配置yum源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改主控端配置文件，修改master地址和id"><span class="nav-number">2.2.</span> <span class="nav-text">修改主控端配置文件，修改master地址和id</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动salt-master和salt-minion"><span class="nav-number">2.3.</span> <span class="nav-text">启动salt-master和salt-minion</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
             
 
           </div>
