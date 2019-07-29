@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T04:28:46.526Z">
+<meta property="og:updated_time" content="2019-07-29T04:44:10.225Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="Saltstack介绍 特点：  基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。   服务架构：   在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:28:46" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：12:44:10" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -470,27 +470,99 @@
 <table>
 <thead>
 <tr>
-<th>Tables</th>
-<th align="center">Are</th>
-<th align="right">Cool</th>
+<th>组件</th>
+<th align="center">功能</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>col 1 is</td>
-<td align="center">left-aligned</td>
-<td align="right">$1600</td>
+<td>Salt Master</td>
+<td align="center">用于将命令和配置发送到在受管系统上运行的Salt minion</td>
 </tr>
 <tr>
-<td>col 2 is</td>
-<td align="center">centered</td>
-<td align="right">$12</td>
+<td>Salt Minion</td>
+<td align="center">从Salt master接收命令和配置</td>
 </tr>
 <tr>
-<td>col 3 is</td>
-<td align="center">right-aligned</td>
-<td align="right">$1</td>
+<td>Execution Modules</td>
+<td align="center">实时监控，状态和库存；一次性命令和脚本；部署关键更新</td>
+</tr>
+<tr>
+<td>Formulas (States)</td>
+<td align="center">系统配置的声明性或命令式表示</td>
+</tr>
+<tr>
+<td>Grains</td>
+<td align="center">Grains是有关底层受管系统的静态信息，包括操作系统，内存和许多其他系统属性。</td>
+</tr>
+<tr>
+<td>Runners</td>
+<td align="center">在Salt master上执行的模块，用于执行支持任务。Salt runners报告作业状态，连接状态，从外部API读取数据，查询连接的Salt minions等。</td>
+</tr>
+<tr>
+<td>Returners</td>
+<td align="center">将Salt minions返回的数据发送到另一个系统，例如数据库。Salt Returners可以在Salt minion或Salt master上运行。</td>
+</tr>
+<tr>
+<td>Reactor</td>
+<td align="center">在SaltStack环境中发生事件时触发反应。</td>
+</tr>
+<tr>
+<td>Salt SSH</td>
+<td align="center">在没有Salt minion的系统上通过SSH运行Salt命令。</td>
 </tr>
 </tbody></table>
+<h3 id="SaltStack安装"><a href="#SaltStack安装" class="headerlink" title="SaltStack安装"></a>SaltStack安装</h3><table>
+<thead>
+<tr>
+<th>ip</th>
+<th align="center">组件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.168.111.43</td>
+<td align="center">salt</td>
+</tr>
+<tr>
+<td>salt-cloud</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>salt-master</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>salt-minion</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>salt-ssh</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>salt-syndic</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>192.168.111.45</td>
+<td align="center">salt-minion</td>
+</tr>
+<tr>
+<td>1. 配置yum源</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://repo.saltstack.com/yum/redhat/salt-repo-latest-<span class="number">2</span>.el7.noarch.rpm</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# yum</span> -y install salt salt-cloud salt-<span class="keyword">master</span> <span class="title">salt-minion</span> salt-ssh salt-syndic</span><br><span class="line">[root@Minion ~]<span class="comment"># yum -y install salt-minion</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>修改主控端配置文件，修改master地址和id</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# sed</span> -i '/^<span class="comment">#id:/a id: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#master:/a master: 192.168.111.43' /etc/salt/minion</span></span><br><span class="line">[root@Minion ~]<span class="comment"># sed -i '/^#id:/a id: 192.168.111.45' /etc/salt/minion</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动salt-master和salt-minion</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">~]# systemctl</span> <span class="literal">start</span> salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> <span class="literal">start</span> salt-minion &amp;&amp; systemctl enable salt-<span class="keyword">master</span> <span class="title">&amp;&amp; systemctl</span> enable salt-minion</span><br><span class="line">[root@Minion ~]<span class="comment"># systemctl start salt-minion &amp;&amp; systemctl enable salt-minion</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="认证机制"><a href="#认证机制" class="headerlink" title="认证机制"></a>认证机制</h3><p>saltstack主控端是依靠openssl证书来与受控端主机认证通讯的，受控端启动后会发送给主控端一个公钥证书文件，在主控端用salt-key命令来管理证书。</p>
 
       
     </div>
@@ -689,7 +761,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Saltstack介绍"><span class="nav-number">1.</span> <span class="nav-text">Saltstack介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SaltStack安装"><span class="nav-number">2.</span> <span class="nav-text">SaltStack安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#认证机制"><span class="nav-number">3.</span> <span class="nav-text">认证机制</span></a></li></ol></div>
             
 
           </div>
