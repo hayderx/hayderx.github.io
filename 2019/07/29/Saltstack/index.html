@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-29T09:01:51.745Z">
+<meta property="og:updated_time" content="2019-07-29T09:05:31.319Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Saltstack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：17:01:51" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
+              <time title="创建时间：2019-07-29 11:28:53 / 修改时间：17:05:31" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
             </span>
           
 
@@ -641,7 +641,7 @@
 </li>
 </ul>
 <p>定义top file入口文件</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@master ~</span>]<span class="meta"># vim /srv/pillar/base/top.sls</span></span><br><span class="line"><span class="keyword">base</span>:       <span class="comment">//指定环境</span></span><br><span class="line">  <span class="string">'192.168.111.43'</span>:     <span class="comment">//指定目标</span></span><br><span class="line">    - apache            <span class="comment">//引用apache.sls或apache/init.sls</span></span><br><span class="line"><span class="comment">//这个top.sls文件的意思表示的是192.168.111.43这台主机的base环境能够访问到apache这个pillar</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">root@master ~</span>]<span class="meta"># salt '*' pillar.items</span></span><br><span class="line"><span class="number">192.168</span><span class="number">.111</span><span class="number">.43</span>:</span><br><span class="line">    ----------</span><br><span class="line">    apache:</span><br><span class="line">        httpd</span><br><span class="line"><span class="number">192.168</span><span class="number">.111</span><span class="number">.45</span>:</span><br><span class="line">    ----------</span><br><span class="line">```    </span><br><span class="line">在salt下修改apache的状态文件，引用pillar的数据</span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@master ~</span>]<span class="meta"># vim /srv/pillar/base/top.sls</span></span><br><span class="line"><span class="keyword">base</span>:       <span class="comment">//指定环境</span></span><br><span class="line">  <span class="string">'192.168.111.43'</span>:     <span class="comment">//指定目标</span></span><br><span class="line">    - apache            <span class="comment">//引用apache.sls或apache/init.sls</span></span><br><span class="line"><span class="comment">//这个top.sls文件的意思表示的是192.168.111.43这台主机的base环境能够访问到apache这个pillar</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">root@master ~</span>]<span class="meta"># salt '*' pillar.items</span></span><br><span class="line"><span class="number">192.168</span><span class="number">.111</span><span class="number">.43</span>:</span><br><span class="line">    ----------</span><br><span class="line">    apache:</span><br><span class="line">        httpd</span><br><span class="line"><span class="number">192.168</span><span class="number">.111</span><span class="number">.45</span>:</span><br><span class="line">    ----------</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">在salt下修改apache的状态文件，引用pillar的数据</span><br></pre></td></tr></table></figure>
 
 <p>[root@master ~]# vim /srv/salt/base/web/apache/apache.sls<br>apache-install:<br>  pkg.installed:<br>    - name: </p>
 <p>apache-service:<br>  service.running:<br>    - name: <br>    - enable: True</p>
