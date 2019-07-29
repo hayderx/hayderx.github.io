@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Saltstack]]></title>
+    <url>%2F2019%2F07%2F29%2FSaltstack%2F</url>
+    <content type="text"><![CDATA[Saltstack介绍 特点： 基于Python的C/S架构配置管理工具。 底层使用ZeroMQ消息队列pub/sub方式通信。 使用SSL证书签发的方式进行认证管理，传输采用AES加密。 服务架构： 在saltstack架构中服务端叫Master，客户端叫Minion。在Master和Minion段都是以守护进程的模式运行，一直监听配置文件里定义的ret_port(接受minion请求)和publish_port(发布消息)的端口。]]></content>
+      <categories>
+        <category>devops</category>
+      </categories>
+      <tags>
+        <tag>devops</tag>
+        <tag>saltstack</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Hello World]]></title>
     <url>%2F2019%2F07%2F18%2Fhello-world%2F</url>
     <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1hexo new "My New Post" More info: Writing Run server1hexo server More info: Server Generate static files1hexo generate More info: Generating Deploy to remote sites1hexo deploy More info: Deployment]]></content>
