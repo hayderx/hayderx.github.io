@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-31T03:10:11.562Z">
+<meta property="og:updated_time" content="2019-07-31T03:12:24.113Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SaltStack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-31 11:10:11" itemprop="dateModified" datetime="2019-07-31T11:10:11+08:00">2019-07-31</time>
+                <time title="修改时间：2019-07-31 11:12:24" itemprop="dateModified" datetime="2019-07-31T11:12:24+08:00">2019-07-31</time>
               </span>
             
           
@@ -659,7 +659,7 @@
 </li>
 </ul>
 <p>这个top.sls文件的意思表示的是192.168.111.43这台主机的base环境能够访问到apache这个pillar</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@master</span> ~]<span class="meta"># salt <span class="string">'*'</span> pillar.items</span></span><br><span class="line"><span class="number">192.168</span><span class="number">.111</span><span class="number">.43</span>:</span><br><span class="line">    ----------</span><br><span class="line">    apache:</span><br><span class="line">        httpd</span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">- 在salt下修改apache的状态文件，引用pillar的数据</span><br></pre></td></tr></table></figure>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="symbol">@master</span> ~]<span class="meta"># salt <span class="string">'*'</span> pillar.items</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">- 在salt下修改apache的状态文件，引用pillar的数据</span><br></pre></td></tr></table></figure>
 
 <p>[root@master ~]# vim /srv/salt/base/web/apache/apache.sls<br>apache-install:<br>  pkg.installed:<br>    - name: </p>
 <p>apache-service:<br>  service.running:<br>    - name: <br>    - enable: True</p>
