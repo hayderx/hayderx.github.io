@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-07-31T03:21:54.141Z">
+<meta property="og:updated_time" content="2019-07-31T03:24:42.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SaltStack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-31 11:21:54" itemprop="dateModified" datetime="2019-07-31T11:21:54+08:00">2019-07-31</time>
+                <time title="修改时间：2019-07-31 11:24:42" itemprop="dateModified" datetime="2019-07-31T11:24:42+08:00">2019-07-31</time>
               </span>
             
           
@@ -767,10 +767,10 @@
 <h4 id="state-highstate"><a href="#state-highstate" class="headerlink" title="state.highstate"></a>state.highstate</h4><p>执行高级状态</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@<span class="keyword">Master</span> <span class="title">base</span>]<span class="comment"># pwd</span></span><br><span class="line">/srv/salt/base</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">base</span>]<span class="comment"># ls</span></span><br><span class="line">apache.sls  top.sls</span><br><span class="line">[root@<span class="keyword">Master</span> <span class="title">base</span>]<span class="comment"># salt '192.168.111.45' state.highstate apache</span></span><br><span class="line"></span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line"><span class="comment">#### state.show_state_usage</span></span><br><span class="line">显示当前系统中的高级状态执行情况</span><br></pre></td></tr></table></figure>
 
-<p>[root@Master base]# salt ‘192.168.111.45’ state.show_state_usage<br>192.168.111.45:<br>    ———-<br>    base:<br>        ———-<br>        count_all:<br>            2<br>        count_unused:<br>            1<br>        count_used:<br>            1<br>        unused:<br>            - top<br>        used:<br>            - apache</p>
+<p>[root@Master base]# salt ‘192.168.111.45’ state.show_state_usage</p>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### state.show_top</span><br><span class="line">返回minion将用于highstate的顶级数据</span><br></pre></td></tr></table></figure>
 
-<p>[root@Master base]# salt ‘192.168.111.45’ state.show_top<br>192.168.111.45:<br>    ———-<br>    base:<br>        - apache</p>
+<p>[root@Master base]# salt ‘192.168.111.45’ state.show_top</p>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### state.top</span><br><span class="line">执行指定的top file，而不是默认的</span><br></pre></td></tr></table></figure>
 
 <p>[root@Master base]# salt ‘192.168.111.45’ state.top top.sls</p>
