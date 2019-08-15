@@ -102,7 +102,7 @@
 <meta property="og:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://note.youdao.com/yws/api/personal/file/4076EB34FF6345B0818CD33BDAE36509?method=download&shareKey=1c82b73e6c250359b26bb519b7338541">
-<meta property="og:updated_time" content="2019-08-02T03:26:26.448Z">
+<meta property="og:updated_time" content="2019-08-15T08:01:53.701Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SaltStack">
 <meta name="twitter:description" content="作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。">
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-08-02 11:26:26" itemprop="dateModified" datetime="2019-08-02T11:26:26+08:00">2019-08-02</time>
+                <time title="修改时间：2019-08-15 16:01:53" itemprop="dateModified" datetime="2019-08-15T16:01:53+08:00">2019-08-15</time>
               </span>
             
           
@@ -1022,6 +1022,7 @@ sha512</code></pre><figure class="highlight dns"><table><tr><td class="gutter"><
 <ul>
 <li>syndic的/srv目录下的salt和pillar目录内容要与最顶层的master下的一致，所以要进行数据同步，同步方案通salt-master高可用。</li>
 <li>最顶层的master不知道自己有几个syndic，它只知道自己有多少个minion，并不知道这些minion是由哪些syndic来管理的。</li>
+<li>在下发到syndic过程中，如果网络出现抖动，导致没有收到消息或者延迟收到，master并无感知，最终会导致整个任务的返回不完整。</li>
 </ul>
 <h3 id="salt-syndic部署"><a href="#salt-syndic部署" class="headerlink" title="salt-syndic部署"></a>salt-syndic部署</h3>
       
