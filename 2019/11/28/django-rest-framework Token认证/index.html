@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-28T06:22:06.479Z">
+<meta property="og:updated_time" content="2019-11-28T06:28:28.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django-rest-framework Token认证">
 <meta name="twitter:description" content="Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-11-28 13:44:36 / 修改时间：14:22:06" itemprop="dateCreated datePublished" datetime="2019-11-28T13:44:36+08:00">2019-11-28</time>
+              <time title="创建时间：2019-11-28 13:44:36 / 修改时间：14:28:28" itemprop="dateCreated datePublished" datetime="2019-11-28T13:44:36+08:00">2019-11-28</time>
             </span>
           
 
@@ -475,7 +475,10 @@
 
 <h5 id="创建用户并生成令牌"><a href="#创建用户并生成令牌" class="headerlink" title="创建用户并生成令牌"></a>创建用户并生成令牌</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# python manage.py createsuperuser --username admin</span><br><span class="line">[xu-pc myapi]# python manage.py drf_create_token admin</span><br><span class="line">Generated token b2a929c428f711e3934e98c752c00c111f21bc2e for user admin</span><br></pre></td></tr></table></figure>
 
-<h5 id="使用生成的token请求"><a href="#使用生成的token请求" class="headerlink" title="使用生成的token请求"></a>使用生成的token请求</h5><p>将’Authorization: Token xxx’加入请求头进行请求。</p>
+<h5 id="请求测试"><a href="#请求测试" class="headerlink" title="请求测试"></a>请求测试</h5><p>如果不加token访问会返回401错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# http http://10.133.3.35:8000/hello/</span><br><span class="line">HTTP/1.1 401 Unauthorized</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Length: 58</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 28 Nov 2019 06:26:59 GMT</span><br><span class="line">Server: WSGIServer/0.2 CPython/3.6.5</span><br><span class="line">Vary: Accept</span><br><span class="line">WWW-Authenticate: Token</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "detail": "Authentication credentials were not provided."</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将’Authorization: Token xxx’加入请求头进行请求。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# http http://127.0.0.1:8000/hello/ 'Authorization: Token b2a929c428f711e3934e98c752c00c111f21bc2e'</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Length: 25</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 28 Nov 2019 05:27:25 GMT</span><br><span class="line">Server: WSGIServer/0.2 CPython/3.6.5</span><br><span class="line">Vary: Accept</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "message": "hello,world"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h5 id="用户获取token"><a href="#用户获取token" class="headerlink" title="用户获取token"></a>用户获取token</h5><p>实际工作中，token一般是由用户自己获取的，我们需要编写一个获取token的视图函数</p>
@@ -692,7 +695,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建demo项目"><span class="nav-number">1.</span> <span class="nav-text">创建demo项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建api视图"><span class="nav-number">1.0.1.</span> <span class="nav-text">创建api视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加路由"><span class="nav-number">1.0.2.</span> <span class="nav-text">添加路由</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加权限限制"><span class="nav-number">1.0.3.</span> <span class="nav-text">添加权限限制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加authorizen-认证"><span class="nav-number">1.0.4.</span> <span class="nav-text">添加authorizen 认证</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建用户并生成令牌"><span class="nav-number">1.0.5.</span> <span class="nav-text">创建用户并生成令牌</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用生成的token请求"><span class="nav-number">1.0.6.</span> <span class="nav-text">使用生成的token请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用户获取token"><span class="nav-number">1.0.7.</span> <span class="nav-text">用户获取token</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设置token过期时间"><span class="nav-number">1.0.8.</span> <span class="nav-text">设置token过期时间</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建demo项目"><span class="nav-number">1.</span> <span class="nav-text">创建demo项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建api视图"><span class="nav-number">1.0.1.</span> <span class="nav-text">创建api视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加路由"><span class="nav-number">1.0.2.</span> <span class="nav-text">添加路由</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加权限限制"><span class="nav-number">1.0.3.</span> <span class="nav-text">添加权限限制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加authorizen-认证"><span class="nav-number">1.0.4.</span> <span class="nav-text">添加authorizen 认证</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建用户并生成令牌"><span class="nav-number">1.0.5.</span> <span class="nav-text">创建用户并生成令牌</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#请求测试"><span class="nav-number">1.0.6.</span> <span class="nav-text">请求测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用户获取token"><span class="nav-number">1.0.7.</span> <span class="nav-text">用户获取token</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设置token过期时间"><span class="nav-number">1.0.8.</span> <span class="nav-text">设置token过期时间</span></a></li></ol></li></ol></div>
             
 
           </div>
