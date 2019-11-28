@@ -93,13 +93,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="龙形徽章">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。">
+<meta name="keywords" content="python，Django">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django-rest-framework Token认证">
+<meta property="og:url" content="http://yoursite.com/2019/11/28/django-rest-framework Token认证/index.html">
 <meta property="og:site_name" content="龙形徽章">
+<meta property="og:description" content="Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-28T06:22:06.479Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="龙形徽章">
+<meta name="twitter:title" content="Django-rest-framework Token认证">
+<meta name="twitter:description" content="Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。">
 
 
 
@@ -107,7 +112,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/28/django-rest-framework Token认证/">
 
 
 
@@ -118,7 +123,7 @@
 </script>
 
   
-  <title>龙形徽章</title>
+  <title>Django-rest-framework Token认证 | 龙形徽章</title>
   
 
 
@@ -166,8 +171,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -205,7 +209,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -322,9 +326,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -356,10 +360,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/11/28/django-rest-framework Token认证/" class="post-title-link" itemprop="url">Django-rest-framework Token认证</a>
+          <h1 class="post-title" itemprop="name headline">Django-rest-framework Token认证
+
               
             
           </h1>
@@ -429,6 +431,8 @@
           
 
           
+            <div class="post-description">Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。</div>
+          
 
         </div>
       </header>
@@ -443,23 +447,51 @@
       
 
       
-        
-          Api接口开发中经常需要认证判断权限后才继续操作，没有认证或没有权限是没有继续执行权限的。
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/11/28/django-rest-framework Token认证/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
+        <h3 id="创建demo项目"><a href="#创建demo项目" class="headerlink" title="创建demo项目"></a>创建demo项目</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip install djangorestframework</span><br><span class="line">django-admin startproject myapi</span><br><span class="line">cd myapi</span><br><span class="line">django-admin startapp core</span><br></pre></td></tr></table></figure>
+
+<p>添加app到settings.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    <span class="string">'django.contrib.admin'</span>,</span><br><span class="line">    <span class="string">'django.contrib.auth'</span>,</span><br><span class="line">    <span class="string">'django.contrib.contenttypes'</span>,</span><br><span class="line">    <span class="string">'django.contrib.sessions'</span>,</span><br><span class="line">    <span class="string">'django.contrib.messages'</span>,</span><br><span class="line">    <span class="string">'django.contrib.staticfiles'</span>,</span><br><span class="line">    <span class="string">'core.apps.CoreConfig'</span>,</span><br><span class="line">    <span class="string">'rest_framework'</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>执行迁移数据库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建api视图"><a href="#创建api视图" class="headerlink" title="创建api视图"></a>创建api视图</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">myapi/core/views.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> APIView</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        content = &#123;<span class="string">'message'</span>: <span class="string">'Hello, World!'</span>&#125;</span><br><span class="line">        <span class="keyword">return</span> Response(content)</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加路由"><a href="#添加路由" class="headerlink" title="添加路由"></a>添加路由</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">myapi/urls.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path</span><br><span class="line"><span class="keyword">from</span> myapi.core <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'hello/'</span>, views.HelloView.as_view(), name=<span class="string">'hello'</span>),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>这时，我们通过GET请求访问/hello/方法可以获取对应数据</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# http http://10.133.3.35:8000/hello/</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Length: 25</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 28 Nov 2019 06:00:43 GMT</span><br><span class="line">Server: WSGIServer/0.2 CPython/3.6.5</span><br><span class="line">Vary: Accept</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "message": "hello,world"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加权限限制"><a href="#添加权限限制" class="headerlink" title="添加权限限制"></a>添加权限限制</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">myapi/core/views.py</span><br><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> APIView</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"><span class="keyword">from</span> rest_framework.permissions <span class="keyword">import</span> IsAuthenticated</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HelloView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    permission_classes = (IsAuthenticated,)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        content = &#123;<span class="string">'message'</span>: <span class="string">'Hello, World!'</span>&#125;</span><br><span class="line">        <span class="keyword">return</span> Response(content)</span><br></pre></td></tr></table></figure>
+
+<p>重新访问会返回403错误</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# http http://10.133.3.35:8000/hello/</span><br><span class="line">HTTP/1.1 403 Forbidden</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Length: 58</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 28 Nov 2019 06:06:35 GMT</span><br><span class="line">Server: WSGIServer/0.2 CPython/3.6.5</span><br><span class="line">Vary: Accept, Cookie</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "detail": "Authentication credentials were not provided."</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加authorizen-认证"><a href="#添加authorizen-认证" class="headerlink" title="添加authorizen 认证"></a>添加authorizen 认证</h5><p>settings.py添加APP</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    <span class="string">'django.contrib.admin'</span>,</span><br><span class="line">    <span class="string">'django.contrib.auth'</span>,</span><br><span class="line">    <span class="string">'django.contrib.contenttypes'</span>,</span><br><span class="line">    <span class="string">'django.contrib.sessions'</span>,</span><br><span class="line">    <span class="string">'django.contrib.messages'</span>,</span><br><span class="line">    <span class="string">'django.contrib.staticfiles'</span>,</span><br><span class="line">    <span class="string">'core.apps.CoreConfig'</span>,</span><br><span class="line">    <span class="string">'rest_framework'</span>,</span><br><span class="line">    <span class="string">'rest_framework.authtoken'</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="string">'DEFAULT_AUTHENTICATION_CLASSES'</span>: [</span><br><span class="line">        <span class="string">'rest_framework.authentication.TokenAuthentication'</span>,</span><br><span class="line">    ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>重新执行迁移数据库以创建存储认证令牌的表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# python manage.py  migrate</span><br><span class="line">Operations to perform:</span><br><span class="line">  Apply all migrations: admin, auth, authtoken, contenttypes, sessions</span><br><span class="line">Running migrations:</span><br><span class="line">  Applying authtoken.0001_initial... OK</span><br><span class="line">  Applying authtoken.0002_auto_20160226_1747... OK</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建用户并生成令牌"><a href="#创建用户并生成令牌" class="headerlink" title="创建用户并生成令牌"></a>创建用户并生成令牌</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# python manage.py createsuperuser --username admin</span><br><span class="line">[xu-pc myapi]# python manage.py drf_create_token admin</span><br><span class="line">Generated token b2a929c428f711e3934e98c752c00c111f21bc2e for user admin</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用生成的token请求"><a href="#使用生成的token请求" class="headerlink" title="使用生成的token请求"></a>使用生成的token请求</h5><p>将’Authorization: Token xxx’加入请求头进行请求。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]# http http://127.0.0.1:8000/hello/ 'Authorization: Token b2a929c428f711e3934e98c752c00c111f21bc2e'</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Allow: GET, HEAD, OPTIONS</span><br><span class="line">Content-Length: 25</span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, 28 Nov 2019 05:27:25 GMT</span><br><span class="line">Server: WSGIServer/0.2 CPython/3.6.5</span><br><span class="line">Vary: Accept</span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "message": "hello,world"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="用户获取token"><a href="#用户获取token" class="headerlink" title="用户获取token"></a>用户获取token</h5><p>实际工作中，token一般是由用户自己获取的，我们需要编写一个获取token的视图函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">myapi/urls.py</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path</span><br><span class="line"><span class="keyword">from</span> rest_framework.authtoken.views <span class="keyword">import</span> obtain_auth_token</span><br><span class="line"><span class="keyword">from</span> myapi.core <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'hello/'</span>, views.HelloView.as_view(), name=<span class="string">'hello'</span>),</span><br><span class="line">    path(<span class="string">'api-token-auth/'</span>, obtain_auth_token, name=<span class="string">'api_token_auth'</span>),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>访问/api-token-auth/方法获取token</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[xu-pc myapi]<span class="comment"># http http://127.0.0.1:8000/api-token-auth/ username=admin password=xxxxxxx</span></span><br><span class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">Allow: POST, OPTIONS</span><br><span class="line">Content-Length: <span class="number">52</span></span><br><span class="line">Content-Type: application/json</span><br><span class="line">Date: Thu, <span class="number">28</span> Nov <span class="number">2019</span> <span class="number">06</span>:<span class="number">19</span>:<span class="number">50</span> GMT</span><br><span class="line">Server: WSGIServer/<span class="number">0.2</span> CPython/<span class="number">3.6</span><span class="number">.5</span></span><br><span class="line">X-Frame-Options: SAMEORIGIN</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"token"</span>: <span class="string">"b2a929c428f711e3934e98c752c00c111f21bc2e"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="设置token过期时间"><a href="#设置token过期时间" class="headerlink" title="设置token过期时间"></a>设置token过期时间</h5>
       
     </div>
 
     
 
+    
+      
     
 
     
@@ -477,376 +509,39 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/29/Nginx Proxy模块/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Hayder's BLog">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="龙形徽章">
-    </span>
-
-    
-      <header class="post-header">
-
         
+          
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/29/Nginx Proxy模块/" class="post-title-link" itemprop="url">ngx_http_proxy_module模块</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
+        <div class="post-tags">
           
+            <a href="/tags/python，Django/" rel="tag"># python，Django</a>
           
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-29 18:09:51" itemprop="dateCreated datePublished" datetime="2019-07-29T18:09:51+08:00">2019-07-29</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-30 08:43:26" itemprop="dateModified" datetime="2019-07-30T08:43:26+08:00">2019-07-30</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          nginx的proxy模块提供了代理的头设置及对后端响应进行解析处理的功能。包括变量设置后端的server路径及协议、连接及响应的超时设置、buffer缓冲的设置、向上游获取数据的限速设置、缓存的控制等。
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/29/Nginx Proxy模块/">
-                阅读全文 &raquo;
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/29/Nginx Proxy模块/" rel="next" title="ngx_http_proxy_module模块">
+                <i class="fa fa-chevron-left"></i> ngx_http_proxy_module模块
               </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/29/Saltstack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Hayder's BLog">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="龙形徽章">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/29/Saltstack/" class="post-title-link" itemprop="url">SaltStack</a>
-              
             
-          </h1>
-        
+          </div>
 
-        <div class="post-meta">
+          <span class="post-nav-divider"></span>
 
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-29 11:28:53" itemprop="dateCreated datePublished" datetime="2019-07-29T11:28:53+08:00">2019-07-29</time>
-            </span>
-          
-
-          
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-11-21 17:02:40" itemprop="dateModified" datetime="2019-11-21T17:02:40+08:00">2019-11-21</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/devops/" itemprop="url" rel="index"><span itemprop="name">devops</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          作为一个运维人员，很大一部分工作是在业务的配置管理和状态维护以及版本发布上，而当业务场景及公司规模上了一定规模后，人为手工的去做这些工作将变得极其困难，此时我们将需要利用一些自动化运维的工具来达到批量管理的目的。
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/29/Saltstack/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -856,365 +551,15 @@
   </article>
 
 
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/18/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Hayder's BLog">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="龙形徽章">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/18/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-18 19:13:59" itemprop="dateCreated datePublished" datetime="2019-07-18T19:13:59+08:00">2019-07-18</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-19 20:51:24" itemprop="dateModified" datetime="2019-07-19T20:51:24+08:00">2019-07-19</time>
-              </span>
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/18/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/07/13/Python装饰器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Hayder's BLog">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="龙形徽章">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2013/07/13/Python装饰器/" class="post-title-link" itemprop="url">Python装饰器详解</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2013-07-13 20:46:25" itemprop="dateCreated datePublished" datetime="2013-07-13T20:46:25+08:00">2013-07-13</time>
-            </span>
-          
-
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-11-22 09:24:48" itemprop="dateModified" datetime="2019-11-22T09:24:48+08:00">2019-11-22</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          装饰器是Python的一个重要部分，简单地说，他们是修改其他函数的功能的函数。有助于让我们的代码更简短，也更Pythonic。我们来一步步的理解它。
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2013/07/13/Python装饰器/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -1234,8 +579,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1327,6 +681,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建demo项目"><span class="nav-number">1.</span> <span class="nav-text">创建demo项目</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建api视图"><span class="nav-number">1.0.1.</span> <span class="nav-text">创建api视图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加路由"><span class="nav-number">1.0.2.</span> <span class="nav-text">添加路由</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加权限限制"><span class="nav-number">1.0.3.</span> <span class="nav-text">添加权限限制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加authorizen-认证"><span class="nav-number">1.0.4.</span> <span class="nav-text">添加authorizen 认证</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建用户并生成令牌"><span class="nav-number">1.0.5.</span> <span class="nav-text">创建用户并生成令牌</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用生成的token请求"><span class="nav-number">1.0.6.</span> <span class="nav-text">使用生成的token请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用户获取token"><span class="nav-number">1.0.7.</span> <span class="nav-text">用户获取token</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#设置token过期时间"><span class="nav-number">1.0.8.</span> <span class="nav-text">设置token过期时间</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -1454,6 +825,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   <script src="/js/next-boot.js?v=7.2.0"></script>
 
@@ -1467,6 +842,8 @@
 
   
 
+
+  
 
 
   
