@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-19T09:10:08.712Z">
+<meta property="og:updated_time" content="2019-12-19T09:13:03.060Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django ORM读写分离">
 <meta name="twitter:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-12-19 16:27:07 / 修改时间：17:10:08" itemprop="dateCreated datePublished" datetime="2019-12-19T16:27:07+08:00">2019-12-19</time>
+              <time title="创建时间：2019-12-19 16:27:07 / 修改时间：17:13:03" itemprop="dateCreated datePublished" datetime="2019-12-19T16:27:07+08:00">2019-12-19</time>
             </span>
           
 
@@ -476,7 +476,7 @@
 <li><p>settings.py 里配置Router</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DATABASE_ROUTERS = [<span class="string">'multidb.router.DefaultRouter'</span>]</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>验证</p>
+<li><p>验证<br>可以看到写操作对应的输出为db_for_write函数，读操作对应的输出为db_for_read函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> app.models <span class="keyword">import</span> Products                                                                                                                              </span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: Products.objects.create(prod_name=<span class="string">'hayder2'</span>,prod_price=<span class="string">'3.14'</span>)                                                                                               </span><br><span class="line">write to defalut.</span><br><span class="line">Out[<span class="number">2</span>]: &lt;Products: Products object (<span class="number">6</span>)&gt;</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: Products.objects.all()                                                                                                                                      </span><br><span class="line">Out[<span class="number">3</span>]: read <span class="keyword">from</span> slave.</span><br><span class="line">&lt;QuerySet [&lt;Products: Products object (<span class="number">6</span>)&gt;]&gt;</span><br></pre></td></tr></table></figure>
 
 </li>
