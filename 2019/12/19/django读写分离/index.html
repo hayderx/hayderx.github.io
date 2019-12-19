@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="龙形徽章">
 <meta property="og:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-19T09:09:02.369Z">
+<meta property="og:updated_time" content="2019-12-19T09:10:08.712Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django ORM读写分离">
 <meta name="twitter:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
@@ -386,7 +386,7 @@
                 
               
 
-              <time title="创建时间：2019-12-19 16:27:07 / 修改时间：17:09:02" itemprop="dateCreated datePublished" datetime="2019-12-19T16:27:07+08:00">2019-12-19</time>
+              <time title="创建时间：2019-12-19 16:27:07 / 修改时间：17:10:08" itemprop="dateCreated datePublished" datetime="2019-12-19T16:27:07+08:00">2019-12-19</time>
             </span>
           
 
@@ -482,7 +482,7 @@
 </li>
 </ol>
 <h3 id="一主多从情况"><a href="#一主多从情况" class="headerlink" title="一主多从情况"></a>一主多从情况</h3><p>如果你的环境是一主多从情况，db_for_read需要配置随机选择一台从服务器进行读操作<br>settings.py里再配置多个数据库（slave1，slave2…..）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">db_for_read</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">		<span class="keyword">import</span> random</span><br><span class="line">        choiced = random.choice([<span class="string">'slave'</span>,<span class="string">'slave1'</span>,<span class="string">'slave2'</span>....])</span><br><span class="line">		print(<span class="string">'read from &#123;&#125;.'</span>.format(choiced))</span><br><span class="line">		<span class="keyword">return</span> choiced</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">db_for_read</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">		<span class="keyword">import</span> random</span><br><span class="line">		choiced = random.choice([<span class="string">'slave'</span>,<span class="string">'slave1'</span>,<span class="string">'slave2'</span>....])</span><br><span class="line">		print(<span class="string">'read from &#123;&#125;.'</span>.format(choiced))</span><br><span class="line">		<span class="keyword">return</span> choiced</span><br></pre></td></tr></table></figure>
 
 <h3 id="分库情况"><a href="#分库情况" class="headerlink" title="分库情况"></a>分库情况</h3><p>如果需要不同的app使用不同的库，可以利用model中的app_label来实现db的路由</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">db_for_read</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> model._meta.app_label == <span class="string">'app01'</span>:</span><br><span class="line">			<span class="keyword">import</span> random</span><br><span class="line">			<span class="keyword">return</span> random.choice([<span class="string">'app01_slave'</span>,<span class="string">'app01_slave1'</span>,<span class="string">'app01_slave2'</span>....])</span><br><span class="line">		<span class="keyword">if</span> model._meta.app_label == <span class="string">'app02'</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="string">'app02_slave'</span></span><br></pre></td></tr></table></figure>
