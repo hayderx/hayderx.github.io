@@ -93,13 +93,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="龙形徽章">
-<meta property="og:url" content="http://yoursite.com/tags/Web/index.html">
+  <meta name="description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
+<meta name="keywords" content="python，Django">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django ORM读写分离">
+<meta property="og:url" content="http://yoursite.com/2019/12/19/django读写分离/index.html">
 <meta property="og:site_name" content="龙形徽章">
+<meta property="og:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-19T08:56:33.913Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="龙形徽章">
+<meta name="twitter:title" content="Django ORM读写分离">
+<meta name="twitter:description" content="很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。">
 
 
 
@@ -107,7 +112,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/tags/Web/">
+  <link rel="canonical" href="http://yoursite.com/2019/12/19/django读写分离/">
 
 
 
@@ -118,7 +123,7 @@
 </script>
 
   
-  <title>标签: Web | 龙形徽章</title>
+  <title>Django ORM读写分离 | 龙形徽章</title>
   
 
 
@@ -166,7 +171,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -220,7 +225,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -318,80 +323,240 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Web<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
+
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/19/django读写分离/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hayder's BLog">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="龙形徽章">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/2019/07/29/Nginx Proxy模块/" itemprop="url">
-            
-              <span itemprop="name">ngx_http_proxy_module模块</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Django ORM读写分离
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-07-29T18:09:51+08:00" content="2019-07-29">
-          07-29
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
 
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-19 16:27:07 / 修改时间：16:56:33" itemprop="dateCreated datePublished" datetime="2019-12-19T16:27:07+08:00">2019-12-19</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">很多情况下单台数据库是不足以支撑业务压力的，此时很可能需要将读写分开。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><ol>
+<li><p>准备两台mysql数据库，并配置好主从<br>具体操作略，这里我用的是docker起的两个数据库容器。ip分别为172.17.0.2,172.17.0.3。</p>
+</li>
+<li><p>django项目<br>python==3.6.5<br>django==2.2.3</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">djangoadmin startproject multidb</span><br><span class="line">cd multidb</span><br><span class="line">python manage.py startapp app</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>django 配置mysql</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">settings.py:</span><br><span class="line"></span><br><span class="line">INSTALL_APP 添加 app应用。</span><br><span class="line"></span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">'default'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>,</span><br><span class="line">        <span class="string">'NAME'</span>: <span class="string">'multidb'</span>,</span><br><span class="line">        <span class="string">'USER'</span>:<span class="string">'root'</span>,</span><br><span class="line">        <span class="string">'PASSWORD'</span>:<span class="string">'123456'</span>,</span><br><span class="line">        <span class="string">'HOST'</span>: <span class="string">'172.17.0.2'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'slave'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>,</span><br><span class="line">        <span class="string">'NAME'</span>: <span class="string">'multidb'</span>,</span><br><span class="line">        <span class="string">'USER'</span>:<span class="string">'root'</span>,</span><br><span class="line">        <span class="string">'PASSWORD'</span>:<span class="string">'123456'</span>,</span><br><span class="line">        <span class="string">'HOST'</span>: <span class="string">'172.17.0.3'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建Products表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">app/models.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Products</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    prod_name = models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    prod_price = models.DecimalField(max_digits=<span class="number">6</span>,decimal_places=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行数据库迁移操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations</span><br><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置读写分离"><a href="#设置读写分离" class="headerlink" title="设置读写分离"></a>设置读写分离</h3><p>读写分离有两种方法：手动读写分离和自动读写分离</p>
+<h5 id="手动读写分离"><a href="#手动读写分离" class="headerlink" title="手动读写分离"></a>手动读写分离</h5><p>在需要使用数据库时手动通过.using(db) 来指定需要使用的库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> app.models <span class="keyword">import</span> Products</span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: Products.objects.using(<span class="string">'default'</span>).create(prod_name=<span class="string">'hayder'</span>,prod_price=<span class="string">'1.3'</span>)                                                                                </span><br><span class="line">Out[<span class="number">2</span>]: &lt;Products: Products object (<span class="number">3</span>)&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="自动读写分离"><a href="#自动读写分离" class="headerlink" title="自动读写分离"></a>自动读写分离</h5><p>需要配置数据库路由来自动实现，这样就不用每次读写时指定响应的数据库。</p>
+<ol>
+<li><p>新建数据库路由脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">settings.py同级目录新建route.py</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DefaultRouter</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">db_for_read</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">        print(<span class="string">'read from slave.'</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'slave'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">db_for_write</span><span class="params">(self, model, **hints)</span>:</span></span><br><span class="line">        print(<span class="string">'write to defalut.'</span>)                                                                                                                                   </span><br><span class="line">        <span class="keyword">return</span> <span class="string">'default'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">allow_relation</span><span class="params">(self, obj1, obj2, **hints)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">allow_migrate</span><span class="params">(self, db, app_label, model=None, **hints)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">db_for_read 进行读操作的路由策略。</span><br><span class="line">db_for_write 增删改操作在default配置的数据库（主库）进行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>settings.py 里配置Router</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DATABASE_ROUTERS = [<span class="string">'multidb.router.DefaultRouter'</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>验证</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">In [<span class="number">1</span>]: <span class="keyword">from</span> app.models <span class="keyword">import</span> Products                                                                                                                              </span><br><span class="line"></span><br><span class="line">In [<span class="number">2</span>]: Products.objects.create(prod_name=<span class="string">'hayder2'</span>,prod_price=<span class="string">'3.14'</span>)                                                                                               </span><br><span class="line">write to defalut.</span><br><span class="line">Out[<span class="number">2</span>]: &lt;Products: Products object (<span class="number">6</span>)&gt;</span><br><span class="line"></span><br><span class="line">In [<span class="number">3</span>]: Products.objects.all()                                                                                                                                      </span><br><span class="line">Out[<span class="number">3</span>]: read <span class="keyword">from</span> slave.</span><br><span class="line">&lt;QuerySet [&lt;Products: Products object (<span class="number">6</span>)&gt;]&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
 
       
     </div>
 
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/python，Django/" rel="tag"># python，Django</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/28/django-rest-framework Token认证/" rel="next" title="Django-rest-framework Token认证">
+                <i class="fa fa-chevron-left"></i> Django-rest-framework Token认证
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -411,8 +576,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -504,6 +678,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置读写分离"><span class="nav-number">3.</span> <span class="nav-text">设置读写分离</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#手动读写分离"><span class="nav-number">3.0.1.</span> <span class="nav-text">手动读写分离</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自动读写分离"><span class="nav-number">3.0.2.</span> <span class="nav-text">自动读写分离</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -631,6 +822,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   <script src="/js/next-boot.js?v=7.2.0"></script>
 
@@ -644,6 +839,8 @@
 
   
 
+
+  
 
 
   
