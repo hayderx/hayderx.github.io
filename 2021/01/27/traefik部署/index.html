@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="Traefik-Ingress-Controller">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kubernetes部署traefik2">
+<meta property="og:url" content="http://yoursite.com/2021/01/27/traefik部署/index.html">
+<meta property="og:site_name" content="龙形徽章">
+<meta property="og:description" content="Traefik-Ingress-Controller">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-01-27T10:37:43.510Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kubernetes部署traefik2">
+<meta name="twitter:description" content="Traefik-Ingress-Controller">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2021/01/27/traefik部署/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  
+  <title>kubernetes部署traefik2 | 龙形徽章</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">龙形徽章</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/27/traefik部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Hayder's BLog">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="龙形徽章">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kubernetes部署traefik2
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-01-27 18:15:23 / 修改时间：18:37:43" itemprop="dateCreated datePublished" datetime="2021-01-27T18:15:23+08:00">2021-01-27</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+            <div class="post-description">Traefik-Ingress-Controller</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h2><table>
+<thead>
+<tr>
+<th align="left">角色</th>
+<th align="right">IP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">master</td>
+<td align="right">192.168.0.103 192.168.0.105</td>
+</tr>
+<tr>
+<td align="left">node</td>
+<td align="right">192.168.0.106 192.168.0.107 192.168.0.108</td>
+</tr>
+<tr>
+<td align="left">nginx+keepalived</td>
+<td align="right">192.168.0.109 192.168.0.110</td>
+</tr>
+</tbody></table>
+<h2 id="部署方式介绍"><a href="#部署方式介绍" class="headerlink" title="部署方式介绍"></a>部署方式介绍</h2><p>traefik有多种部署方式，当前我们使用daemonset方式部署</p>
+<ul>
+<li>deployment</li>
+<li>daemonset</li>
+<li>helm<br>daemonset 能确定有哪些node在运行traefik，所以可以确定的知道后端ip，但是不能方便的伸缩。<br>deployment 可以更方便的伸缩，但是不能确定有哪些node在运行traefik所以不能确定的知道后端ip。</li>
+</ul>
+<h2 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h2><h3 id="创建crd文件"><a href="#创建crd文件" class="headerlink" title="创建crd文件"></a>创建crd文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim crd.yaml</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## IngressRoute</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: ingressroutes.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: IngressRoute</span><br><span class="line">    plural: ingressroutes</span><br><span class="line">    singular: ingressroute</span><br><span class="line">---</span><br><span class="line"><span class="comment">## IngressRouteTCP</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: ingressroutetcps.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: IngressRouteTCP</span><br><span class="line">    plural: ingressroutetcps</span><br><span class="line">    singular: ingressroutetcp</span><br><span class="line">---</span><br><span class="line"><span class="comment">## Middleware</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: middlewares.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: Middleware</span><br><span class="line">    plural: middlewares</span><br><span class="line">    singular: middleware</span><br><span class="line">---</span><br><span class="line"><span class="comment">## TLSOption</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: tlsoptions.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: TLSOption</span><br><span class="line">    plural: tlsoptions</span><br><span class="line">    singular: tlsoption</span><br><span class="line">---</span><br><span class="line"><span class="comment">## TraefikService</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: traefikservices.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: TraefikService</span><br><span class="line">    plural: traefikservices</span><br><span class="line">    singular: traefikservice</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]# kubectl apply -f crd.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建RBAC"><a href="#创建RBAC" class="headerlink" title="创建RBAC"></a>创建RBAC</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim rbac.yaml</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## IngressRoute</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: ingressroutes.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: IngressRoute</span><br><span class="line">    plural: ingressroutes</span><br><span class="line">    singular: ingressroute</span><br><span class="line">---</span><br><span class="line"><span class="comment">## IngressRouteTCP</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: ingressroutetcps.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: IngressRouteTCP</span><br><span class="line">    plural: ingressroutetcps</span><br><span class="line">    singular: ingressroutetcp</span><br><span class="line">---</span><br><span class="line"><span class="comment">## Middleware</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: middlewares.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: Middleware</span><br><span class="line">    plural: middlewares</span><br><span class="line">    singular: middleware</span><br><span class="line">---</span><br><span class="line"><span class="comment">## TLSOption</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: tlsoptions.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: TLSOption</span><br><span class="line">    plural: tlsoptions</span><br><span class="line">    singular: tlsoption</span><br><span class="line">---</span><br><span class="line"><span class="comment">## TraefikService</span></span><br><span class="line">apiVersion: apiextensions.k8s.io/v1beta1</span><br><span class="line">kind: CustomResourceDefinition</span><br><span class="line">metadata:</span><br><span class="line">  name: traefikservices.traefik.containo.us</span><br><span class="line">spec:</span><br><span class="line">  scope: Namespaced</span><br><span class="line">  group: traefik.containo.us</span><br><span class="line">  version: v1alpha1</span><br><span class="line">  names:</span><br><span class="line">    kind: TraefikService</span><br><span class="line">    plural: traefikservices</span><br><span class="line">    singular: traefikservice</span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># kubectl apply -f crd.yaml ^C</span></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim rbac.yaml ^C</span></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># cat rbac.yaml </span></span><br><span class="line"><span class="comment">## ServiceAccount</span></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">---</span><br><span class="line"><span class="comment">## ClusterRole</span></span><br><span class="line">kind: ClusterRole</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">rules:</span><br><span class="line">  - apiGroups: [<span class="string">""</span>]</span><br><span class="line">    resources: [<span class="string">"services"</span>,<span class="string">"endpoints"</span>,<span class="string">"secrets"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"extensions"</span>]</span><br><span class="line">    resources: [<span class="string">"ingresses"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"extensions"</span>]</span><br><span class="line">    resources: [<span class="string">"ingresses/status"</span>]</span><br><span class="line">    verbs: [<span class="string">"update"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"traefik.containo.us"</span>]</span><br><span class="line">    resources: [<span class="string">"middlewares"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"traefik.containo.us"</span>]</span><br><span class="line">    resources: [<span class="string">"ingressroutes"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"traefik.containo.us"</span>]</span><br><span class="line">    resources: [<span class="string">"ingressroutetcps"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"traefik.containo.us"</span>]</span><br><span class="line">    resources: [<span class="string">"tlsoptions"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">  - apiGroups: [<span class="string">"traefik.containo.us"</span>]</span><br><span class="line">    resources: [<span class="string">"traefikservices"</span>]</span><br><span class="line">    verbs: [<span class="string">"get"</span>,<span class="string">"list"</span>,<span class="string">"watch"</span>]</span><br><span class="line">---</span><br><span class="line"><span class="comment">## ClusterRoleBinding</span></span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">subjects:</span><br><span class="line">  - kind: ServiceAccount</span><br><span class="line">    name: traefik-ingress-controller</span><br><span class="line">    namespace: kube-system</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]# kubectl apply -f rbac.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建configmap"><a href="#创建configmap" class="headerlink" title="创建configmap"></a>创建configmap</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim configmap.yaml </span></span><br><span class="line"></span><br><span class="line">kind: ConfigMap</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-config</span><br><span class="line">  namespace: kube-system</span><br><span class="line">data:</span><br><span class="line">  traefik.yaml: |-</span><br><span class="line">    ping: <span class="string">""</span>                    <span class="comment">## 启用 Ping</span></span><br><span class="line">    serversTransport:</span><br><span class="line">      insecureSkipVerify: true  <span class="comment">## Traefik 忽略验证代理服务的 TLS 证书</span></span><br><span class="line">    api:</span><br><span class="line">      insecure: true            <span class="comment">## 允许 HTTP 方式访问 API</span></span><br><span class="line">      dashboard: true           <span class="comment">## 启用 Dashboard</span></span><br><span class="line">      debug: false              <span class="comment">## 启用 Debug 调试模式</span></span><br><span class="line">    metrics:</span><br><span class="line">      prometheus: <span class="string">""</span>            <span class="comment">## 配置 Prometheus 监控指标数据，并使用默认配置</span></span><br><span class="line">    entryPoints:</span><br><span class="line">      web:</span><br><span class="line">        address: <span class="string">":80"</span>          <span class="comment">## 配置 80 端口，并设置入口名称为 web</span></span><br><span class="line">      websecure:</span><br><span class="line">        address: <span class="string">":443"</span>         <span class="comment">## 配置 443 端口，并设置入口名称为 websecure</span></span><br><span class="line">    providers:</span><br><span class="line">      kubernetesCRD: <span class="string">""</span>         <span class="comment">## 启用 Kubernetes CRD 方式来配置路由规则</span></span><br><span class="line">      kubernetesIngress: <span class="string">""</span>     <span class="comment">## 启动 Kubernetes Ingress 方式来配置路由规则</span></span><br><span class="line">    log:</span><br><span class="line">      filePath: <span class="string">""</span>              <span class="comment">## 设置调试日志文件存储路径，如果为空则输出到控制台</span></span><br><span class="line">      level: error              <span class="comment">## 设置调试日志级别</span></span><br><span class="line">      format: json              <span class="comment">## 设置调试日志格式</span></span><br><span class="line">    accessLog:</span><br><span class="line">      filePath: <span class="string">""</span>              <span class="comment">## 设置访问日志文件存储路径，如果为空则输出到控制台</span></span><br><span class="line">      format: json              <span class="comment">## 设置访问调试日志格式</span></span><br><span class="line">      bufferingSize: <span class="number">0</span>          <span class="comment">## 设置访问日志缓存行数</span></span><br><span class="line">      filters:</span><br><span class="line">        <span class="comment">#statusCodes: ["200"]   ## 设置只保留指定状态码范围内的访问日志</span></span><br><span class="line">        retryAttempts: true     <span class="comment">## 设置代理访问重试失败时，保留访问日志</span></span><br><span class="line">        minDuration: <span class="number">20</span>         <span class="comment">## 设置保留请求时间超过指定持续时间的访问日志</span></span><br><span class="line">      fields:                   <span class="comment">## 设置访问日志中的字段是否保留（keep 保留、drop 不保留）</span></span><br><span class="line">        defaultMode: keep       <span class="comment">## 设置默认保留访问日志字段</span></span><br><span class="line">        names:                  <span class="comment">## 针对访问日志特别字段特别配置保留模式</span></span><br><span class="line">          ClientUsername: drop  </span><br><span class="line">        headers:                <span class="comment">## 设置 Header 中字段是否保留</span></span><br><span class="line">          defaultMode: keep     <span class="comment">## 设置默认保留 Header 中字段</span></span><br><span class="line">          names:                <span class="comment">## 针对 Header 中特别字段特别配置保留模式</span></span><br><span class="line">            User-Agent: redact</span><br><span class="line">            Authorization: drop</span><br><span class="line">            Content-Type: keep</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@k8s-master01 traefik]# kubectl apply -f configmap.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署traefik"><a href="#部署traefik" class="headerlink" title="部署traefik"></a>部署traefik</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim deploy.yaml</span></span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">    - name: web</span><br><span class="line">      port: <span class="number">80</span></span><br><span class="line">    - name: websecure</span><br><span class="line">      port: <span class="number">443</span></span><br><span class="line">    - name: admin</span><br><span class="line">      port: <span class="number">8080</span></span><br><span class="line">  selector:</span><br><span class="line">    app: traefik</span><br><span class="line">---</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: DaemonSet</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    app: traefik</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: traefik</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: traefik</span><br><span class="line">      labels:</span><br><span class="line">        app: traefik</span><br><span class="line">    spec:</span><br><span class="line">      serviceAccountName: traefik-ingress-controller</span><br><span class="line">      terminationGracePeriodSeconds: <span class="number">1</span></span><br><span class="line">      containers:</span><br><span class="line">        - image: traefik:v2<span class="number">.1</span><span class="number">.2</span></span><br><span class="line">          name: traefik-ingress-lb</span><br><span class="line">          ports:</span><br><span class="line">            - name: web</span><br><span class="line">              containerPort: <span class="number">80</span></span><br><span class="line">              hostPort: <span class="number">80</span>         <span class="comment">## 将容器端口绑定所在服务器的 80 端口</span></span><br><span class="line">            - name: websecure</span><br><span class="line">              containerPort: <span class="number">443</span></span><br><span class="line">              hostPort: <span class="number">443</span>        <span class="comment">## 将容器端口绑定所在服务器的 443 端口</span></span><br><span class="line">            - name: admin</span><br><span class="line">              containerPort: <span class="number">8080</span>  <span class="comment">## Traefik Dashboard 端口</span></span><br><span class="line">          resources:</span><br><span class="line">            limits:</span><br><span class="line">              cpu: <span class="number">2000</span>m</span><br><span class="line">              memory: <span class="number">1024</span>Mi</span><br><span class="line">            requests:</span><br><span class="line">              cpu: <span class="number">1000</span>m</span><br><span class="line">              memory: <span class="number">1024</span>Mi</span><br><span class="line">          securityContext:</span><br><span class="line">            capabilities:</span><br><span class="line">              drop:</span><br><span class="line">                - ALL</span><br><span class="line">              add:</span><br><span class="line">                - NET_BIND_SERVICE</span><br><span class="line">          args:</span><br><span class="line">            - --configfile=/config/traefik.yaml</span><br><span class="line">          volumeMounts:</span><br><span class="line">            - mountPath: <span class="string">"/config"</span></span><br><span class="line">              name: <span class="string">"config"</span></span><br><span class="line">      volumes:</span><br><span class="line">        - name: config</span><br><span class="line">          configMap:</span><br><span class="line">            name: traefik-config </span><br><span class="line">      tolerations:              <span class="comment">## 设置容忍所有污点，防止节点被设置污点</span></span><br><span class="line">        - operator: <span class="string">"Exists"</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@k8s-master01 traefik]# kubectl apply -f deploy.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>我们使用traefik后台来验证</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim dashboard-route.yaml</span></span><br><span class="line"></span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">    - name: web</span><br><span class="line">      port: <span class="number">80</span></span><br><span class="line">    - name: websecure</span><br><span class="line">      port: <span class="number">443</span></span><br><span class="line">    - name: admin</span><br><span class="line">      port: <span class="number">8080</span></span><br><span class="line">  selector:</span><br><span class="line">    app: traefik</span><br><span class="line">---</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: DaemonSet</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-ingress-controller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    app: traefik</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: traefik</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: traefik</span><br><span class="line">      labels:</span><br><span class="line">        app: traefik</span><br><span class="line">    spec:</span><br><span class="line">      serviceAccountName: traefik-ingress-controller</span><br><span class="line">      terminationGracePeriodSeconds: <span class="number">1</span></span><br><span class="line">      containers:</span><br><span class="line">        - image: traefik:v2<span class="number">.1</span><span class="number">.2</span></span><br><span class="line">          name: traefik-ingress-lb</span><br><span class="line">          ports:</span><br><span class="line">            - name: web</span><br><span class="line">              containerPort: <span class="number">80</span></span><br><span class="line">              hostPort: <span class="number">80</span>         <span class="comment">## 将容器端口绑定所在服务器的 80 端口</span></span><br><span class="line">            - name: websecure</span><br><span class="line">              containerPort: <span class="number">443</span></span><br><span class="line">              hostPort: <span class="number">443</span>        <span class="comment">## 将容器端口绑定所在服务器的 443 端口</span></span><br><span class="line">            - name: admin</span><br><span class="line">              containerPort: <span class="number">8080</span>  <span class="comment">## Traefik Dashboard 端口</span></span><br><span class="line">          resources:</span><br><span class="line">            limits:</span><br><span class="line">              cpu: <span class="number">2000</span>m</span><br><span class="line">              memory: <span class="number">1024</span>Mi</span><br><span class="line">            requests:</span><br><span class="line">              cpu: <span class="number">1000</span>m</span><br><span class="line">              memory: <span class="number">1024</span>Mi</span><br><span class="line">          securityContext:</span><br><span class="line">            capabilities:</span><br><span class="line">              drop:</span><br><span class="line">                - ALL</span><br><span class="line">              add:</span><br><span class="line">                - NET_BIND_SERVICE</span><br><span class="line">          args:</span><br><span class="line">            - --configfile=/config/traefik.yaml</span><br><span class="line">          volumeMounts:</span><br><span class="line">            - mountPath: <span class="string">"/config"</span></span><br><span class="line">              name: <span class="string">"config"</span></span><br><span class="line">      volumes:</span><br><span class="line">        - name: config</span><br><span class="line">          configMap:</span><br><span class="line">            name: traefik-config </span><br><span class="line">      tolerations:              <span class="comment">## 设置容忍所有污点，防止节点被设置污点</span></span><br><span class="line">        - operator: <span class="string">"Exists"</span></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># kubectl apply -f deploy.yaml ^C</span></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># ls</span></span><br><span class="line">configmap.yaml  crd.yaml  dashboard-route.yaml  deploy.yaml  rbac.yaml</span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># vim dashboard-route.yaml ^C</span></span><br><span class="line">[root@k8s-master01 traefik]<span class="comment"># cat dashboard-route.yaml </span></span><br><span class="line">apiVersion: traefik.containo.us/v1alpha1</span><br><span class="line">kind: IngressRoute</span><br><span class="line">metadata:</span><br><span class="line">  name: traefik-dashboard-route</span><br><span class="line">  namespace: kube-system</span><br><span class="line">spec:</span><br><span class="line">  entryPoints:</span><br><span class="line">    - web</span><br><span class="line">  routes:</span><br><span class="line">    - match: Host(`traefik.hayder.com`)</span><br><span class="line">      kind: Rule</span><br><span class="line">      services:</span><br><span class="line">        - name: traefik</span><br><span class="line">          port: <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-master01 traefik]# kubectl apply -f dashboard-route.yaml</span><br><span class="line">[root@k8s-master01 traefik]# kubectl get ingressroute -n kube-system</span><br><span class="line">NAME                      AGE</span><br><span class="line">traefik-dashboard-route   41m</span><br><span class="line">[root@k8s-master01 traefik]#</span><br></pre></td></tr></table></figure>
+
+<p>在hosts文件添加解析 192.168.0.107 traefik.hayder.com<br>浏览器访问<a href="http://traefik.hayder.com" target="_blank" rel="noopener">http://traefik.hayder.com</a></p>
+
+      
+    </div>
+
+    
+
+    
+      
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+	
+	
+	<div>
+		
+			<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-----------------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-----------------------</div>
+    
+</div>
+		
+	</div>
+	
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/28/Python web框架Sanic之异常/" rel="next" title="Python web框架Sanic之路由">
+                <i class="fa fa-chevron-left"></i> Python web框架Sanic之路由
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  
+  <p class="site-author-name" itemprop="name">Hayder's BLog</p>
+  <div class="site-description motion-element" itemprop="description"></div>
+</div>
+
+
+  <nav class="site-state motion-element">
+    
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境介绍"><span class="nav-number">1.</span> <span class="nav-text">环境介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署方式介绍"><span class="nav-number">2.</span> <span class="nav-text">部署方式介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署过程"><span class="nav-number">3.</span> <span class="nav-text">部署过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建crd文件"><span class="nav-number">3.1.</span> <span class="nav-text">创建crd文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建RBAC"><span class="nav-number">3.2.</span> <span class="nav-text">创建RBAC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建configmap"><span class="nav-number">3.3.</span> <span class="nav-text">创建configmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署traefik"><span class="nav-number">3.4.</span> <span class="nav-text">部署traefik</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">3.5.</span> <span class="nav-text">验证</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hayder's BLog</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i><span id="busuanzi_container_site_pv">
+    总访问量:<span id="busuanzi_value_site_pv"></span>
+	</span>
+  </div>
+  <div class="powered-by">
+	<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+    总访客:<span id="busuanzi_value_site_uv"></span>
+	</span>
+  </div>
+ 
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+    
+    
+  
+  <script color="0,0,255" opacity="0.5" zindex="-1" count="99" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
